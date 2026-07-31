@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About — Divya Shyam Singh</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+  main{ padding-top:0; }
+  section:first-of-type{ padding-top:140px; }
+  #affiliations .aff-row{
+    display:flex; justify-content:space-between; align-items:baseline;
+    padding:16px 0; border-bottom:1px solid var(--line);
+  }
+  #affiliations .aff-row:last-child{ border-bottom:none; }
+  #affiliations .aff-name{ font-family:'Fraunces', serif; font-size:17px; }
+  #affiliations .aff-role{ color:var(--text-dim); font-size:13px; }
+  #about p{ font-size:16px; color:var(--text-dim); max-width:64ch; }
+  #about p strong{ color:var(--text); font-weight:500; }
+</style>
+</head>
+<body>
+
+<header>
+  <a href="index.html" class="mark">Shyam<span>.</span></a>
+  <button class="nav-toggle mono" id="navToggle" aria-label="Toggle menu">Menu</button>
+  <nav id="navMenu">
+    <a href="index.html#work">Work</a>
+    <a href="#personal">Personal</a>
+    <a href="#affiliations">Affiliations</a>
+    <a href="#about">About</a>
+  </nav>
+</header>
+
+<main>
+
+  <section id="personal">
+    <p class="eyebrow mono">Ch.03 — Personal</p>
+    <h2>Off the clock</h2>
+    <div class="duo">
+      <div class="card">
+        <h3>Table tennis</h3>
+        <p>I play at an intermediate club level, with an aggressive, attacking style.</p>
+      </div>
+      <div class="card">
+        <h3>Plants</h3>
+        <p>I keep plants at home and enjoy looking after them.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="affiliations">
+    <p class="eyebrow mono">Ch.04 — Affiliations</p>
+    <h2>Where this work lives</h2>
+    <div class="aff-row">
+      <span class="aff-name">Technical University of Munich (TUM)</span>
+      <span class="aff-role">PhD researcher</span>
+    </div>
+    <!-- Add your chair/lab name, supervisor, or funding body here if you'd like them listed -->
+  </section>
+
+  <section id="about">
+    <p class="eyebrow mono">Ch.05 — About</p>
+    <h2>The short version</h2>
+    <p>I'm <strong>Shyam</strong>. I trained as an engineer and now work on wave physics and machine learning. My days go into finding hidden damage in concrete. My free time goes into table tennis and looking after my plants.</p>
+  </section>
+
+</main>
+
+<footer>
+  <span>© 2026 Divya Shyam Singh</span>
+  <span>TUM · Full Waveform Inversion</span>
+</footer>
+
+<script>
+  const toggle = document.getElementById('navToggle');
+  const menu = document.getElementById('navMenu');
+  toggle.addEventListener('click', () => menu.classList.toggle('open'));
+  document.querySelectorAll('nav a').forEach(a => a.addEventListener('click', () => menu.classList.remove('open')));
+</script>
+
+</body>
+</html>
