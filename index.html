@@ -7,56 +7,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
 <style>
-  :root{
-    --bg:#10141a;
-    --bg-panel:#161b23;
-    --text:#e9e6df;
-    --text-dim:#8f98a3;
-    --amber:#d98e3f;
-    --teal:#5fa8a0;
-    --line: rgba(233,230,223,0.10);
-    --line-strong: rgba(233,230,223,0.18);
-  }
-  *{box-sizing:border-box;}
-  html{scroll-behavior:smooth;}
-  body{
-    margin:0;
-    background:var(--bg);
-    color:var(--text);
-    font-family:'Inter', system-ui, sans-serif;
-    line-height:1.65;
-  }
-  ::selection{ background:var(--amber); color:#10141a; }
-
-  .mono{ font-family:'IBM Plex Mono', monospace; letter-spacing:0.06em; text-transform:uppercase; }
-
-  header{
-    position:fixed; top:0; left:0; right:0; z-index:50;
-    display:flex; align-items:center; justify-content:space-between;
-    padding:18px 40px;
-    background:rgba(16,20,26,0.82);
-    backdrop-filter:blur(8px);
-    border-bottom:1px solid var(--line);
-  }
-  header .mark{ font-family:'Fraunces', serif; font-size:18px; font-weight:600; color:var(--text); text-decoration:none; }
-  header .mark span{ color:var(--amber); }
-  nav{ display:flex; gap:28px; }
-  nav a{
-    color:var(--text-dim); text-decoration:none; font-size:12px;
-    padding-bottom:3px; border-bottom:1px solid transparent;
-    transition:color .2s ease, border-color .2s ease;
-  }
-  nav a:hover, nav a.active{ color:var(--text); border-color:var(--amber); }
-  .nav-toggle{ display:none; background:none; border:1px solid var(--line-strong); color:var(--text); border-radius:6px; padding:6px 10px; font-family:'IBM Plex Mono',monospace; }
-
-  main{ max-width:920px; margin:0 auto; padding:0 40px; }
-
-  section{ padding:120px 0 60px; border-bottom:1px solid var(--line); }
-  section:last-of-type{ border-bottom:none; }
-  .eyebrow{ color:var(--amber); font-size:11px; margin-bottom:18px; }
-  h2{ font-family:'Fraunces', serif; font-weight:500; font-size:30px; margin:0 0 32px; }
-
   #hero{
     min-height:100vh; display:flex; flex-direction:column; justify-content:center;
     padding-top:0; border-bottom:none; position:relative;
@@ -74,59 +26,22 @@
   .wave-caption{ display:flex; justify-content:space-between; margin-top:10px; font-size:11px; color:var(--text-dim); }
   .wave-caption .amber{ color:var(--amber); } .wave-caption .teal-c{ color:var(--teal); }
 
-  .card-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:20px; }
-  .card{
-    background:var(--bg-panel); border:1px solid var(--line);
-    border-radius:10px; padding:22px 24px;
-  }
-  .card h3{ font-family:'Fraunces', serif; font-weight:500; font-size:17px; margin:0 0 8px; }
-  .card p{ color:var(--text-dim); font-size:14.5px; margin:0; }
-  .tag-row{ display:flex; flex-wrap:wrap; gap:8px; margin-top:18px; }
-  .tag{
-    font-family:'IBM Plex Mono', monospace; font-size:11px; letter-spacing:0.03em;
-    color:var(--teal); border:1px solid var(--line-strong); border-radius:20px;
-    padding:5px 12px;
-  }
-
+  #work{ border-bottom:none; padding-bottom:100px; }
   #work .lede-strip{ color:var(--text-dim); font-size:15px; max-width:62ch; margin:-14px 0 28px; }
-
-  .duo{ display:grid; grid-template-columns:1fr 1fr; gap:20px; }
-  .duo .card{ display:flex; flex-direction:column; gap:10px; }
-
-  #affiliations .aff-row{
-    display:flex; justify-content:space-between; align-items:baseline;
-    padding:16px 0; border-bottom:1px solid var(--line);
+  .work-more{
+    margin-top:28px; display:flex; align-items:center; justify-content:space-between;
+    background:var(--bg-panel-2); border:1px solid var(--line-strong);
+    border-radius:10px; padding:20px 24px; gap:20px; flex-wrap:wrap;
   }
-  #affiliations .aff-row:last-child{ border-bottom:none; }
-  #affiliations .aff-name{ font-family:'Fraunces', serif; font-size:17px; }
-  #affiliations .aff-role{ color:var(--text-dim); font-size:13px; }
-
-  #about p{ font-size:16px; color:var(--text-dim); max-width:64ch; }
-  #about p strong{ color:var(--text); font-weight:500; }
-
-  footer{
-    max-width:920px; margin:0 auto; padding:40px 40px 60px;
-    color:var(--text-dim); font-size:12px; display:flex; justify-content:space-between;
-    font-family:'IBM Plex Mono', monospace;
+  .work-more p{ margin:0; color:var(--text-dim); font-size:14px; max-width:44ch; }
+  .work-more a{
+    flex:0 0 auto; display:inline-flex; align-items:center; gap:8px;
+    background:var(--amber); color:#1a1206; font-weight:500; text-decoration:none;
+    font-size:14px; padding:10px 18px; border-radius:8px;
   }
-
-  @media (max-width:720px){
-    header{ padding:16px 20px; }
-    nav{
-      position:fixed; top:58px; left:0; right:0; background:var(--bg);
-      flex-direction:column; gap:0; border-bottom:1px solid var(--line);
-      max-height:0; overflow:hidden; transition:max-height .25s ease;
-    }
-    nav.open{ max-height:240px; }
-    nav a{ padding:14px 20px; width:100%; border-bottom:1px solid var(--line); border-radius:0; }
-    .nav-toggle{ display:block; }
-    main, footer{ padding-left:20px; padding-right:20px; }
-    section{ padding-top:100px; }
-    .card-grid, .duo{ grid-template-columns:1fr; }
-    footer{ flex-direction:column; gap:8px; }
-  }
-
-  @media (prefers-reduced-motion: reduce){ html{ scroll-behavior:auto; } }
+  .more-pages{ display:flex; gap:14px; margin-top:14px; }
+  .more-pages a{ color:var(--text-dim); text-decoration:none; font-size:12px; border-bottom:1px solid var(--line-strong); }
+  .more-pages a:hover{ color:var(--text); border-color:var(--amber); }
 </style>
 </head>
 <body>
@@ -136,9 +51,9 @@
   <button class="nav-toggle mono" id="navToggle" aria-label="Toggle menu">Menu</button>
   <nav id="navMenu">
     <a href="#work">Work</a>
-    <a href="#personal">Personal</a>
-    <a href="#affiliations">Affiliations</a>
-    <a href="#about">About</a>
+    <a href="about.html#personal">Personal</a>
+    <a href="about.html#affiliations">Affiliations</a>
+    <a href="about.html#about">About</a>
   </nav>
 </header>
 
@@ -190,37 +105,16 @@
       <span class="tag">Salvus / SEM</span>
       <span class="tag">non-destructive testing</span>
     </div>
-  </section>
 
-  <section id="personal">
-    <p class="eyebrow mono">Ch.03 — Personal</p>
-    <h2>Off the clock</h2>
-    <div class="duo">
-      <div class="card">
-        <h3>Table tennis</h3>
-        <p>I play at an intermediate club level, with an aggressive, attacking style.</p>
-      </div>
-      <div class="card">
-        <h3>Plants</h3>
-        <p>I keep plants at home and enjoy looking after them.</p>
-      </div>
+    <div class="work-more">
+      <p>One paper from this work shows how to give the search a head start using a pretrained network — full write-up with figures from the paper.</p>
+      <a href="work/transfer-learning-fwi.html">Read the paper walkthrough →</a>
     </div>
-  </section>
-
-  <section id="affiliations">
-    <p class="eyebrow mono">Ch.04 — Affiliations</p>
-    <h2>Where this work lives</h2>
-    <div class="aff-row">
-      <span class="aff-name">Technical University of Munich (TUM)</span>
-      <span class="aff-role">PhD researcher</span>
+    <div class="more-pages">
+      <a href="about.html#personal">Personal</a>
+      <a href="about.html#affiliations">Affiliations</a>
+      <a href="about.html#about">About</a>
     </div>
-    <!-- Add your chair/lab name, supervisor, or funding body here if you'd like them listed -->
-  </section>
-
-  <section id="about">
-    <p class="eyebrow mono">Ch.05 — About</p>
-    <h2>The short version</h2>
-    <p>I'm <strong>Shyam</strong>. I trained as an engineer and now work on wave physics and machine learning. My days go into finding hidden damage in concrete. My free time goes into table tennis and looking after my plants.</p>
   </section>
 
 </main>
@@ -235,19 +129,6 @@
   const menu = document.getElementById('navMenu');
   toggle.addEventListener('click', () => menu.classList.toggle('open'));
   document.querySelectorAll('nav a').forEach(a => a.addEventListener('click', () => menu.classList.remove('open')));
-
-  const sections = document.querySelectorAll('section[id]');
-  const navLinks = document.querySelectorAll('nav a');
-  const spy = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting){
-        navLinks.forEach(l => l.classList.remove('active'));
-        const link = document.querySelector(`nav a[href="#${entry.target.id}"]`);
-        if (link) link.classList.add('active');
-      }
-    });
-  }, { rootMargin: '-45% 0px -50% 0px' });
-  sections.forEach(s => spy.observe(s));
 
   function pathFromPoints(points){
     return points.map((p,i) => (i===0? 'M':'L') + p[0].toFixed(1) + ',' + p[1].toFixed(1)).join(' ');
@@ -294,15 +175,7 @@
     requestAnimationFrame(frame);
   }
 
-  const heroObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting){
-        animateMorph();
-        heroObserver.disconnect();
-      }
-    });
-  }, { threshold: 0.4 });
-  heroObserver.observe(document.getElementById('hero'));
+  animateMorph();
 
   document.getElementById('wave-wrap').addEventListener('click', () => {
     wavePath.setAttribute('d', pathFromPoints(noisy));
