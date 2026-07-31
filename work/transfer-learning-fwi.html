@@ -43,6 +43,7 @@
   figure img{ width:100%; height:auto; display:block; border-radius:8px; border:1px solid var(--line); background:#fff; }
   figcaption{ font-size:13px; color:var(--text-dim); margin-top:10px; line-height:1.55; }
   figcaption strong{ color:var(--text); }
+  figure.fig-compact{ max-width:520px; margin-left:auto; margin-right:auto; }
 
   table.data{ width:100%; border-collapse:collapse; margin:0 0 24px; font-size:13.5px; }
   table.data th, table.data td{ text-align:left; padding:8px 12px; border-bottom:1px solid var(--line); }
@@ -186,67 +187,21 @@
     <figcaption><strong>Fig. 5</strong> — Effect of the weight initialization on the reconstruction of γ over 35 iterations: unmanaged initialization (top row) versus the narrow, high-bias last-layer setup (bottom row).</figcaption>
   </figure>
 
-  <h2 id="results">Results across four damage cases</h2>
-  <p>Four synthetic damage cases of increasing difficulty were used to compare four methods head to head: conventional FWI, NN-based FWI, conventional FWI seeded with the pretrained network's guess, and the full transfer learning NN-based FWI.</p>
-  <figure>
-    <img src="../assets/paper-figs/fig6_cases.png" alt="Four damage cases of increasing complexity: single ellipse, ellipse plus rectangle plus circle, three ellipses, and a complex intersecting arrangement">
-    <figcaption><strong>Fig. 6</strong> — The four test cases, in increasing order of complexity. Case 4 was constructed by hand specifically to stress-test the method.</figcaption>
-  </figure>
+  <h2 id="results">Results: three ellipses of different sizes</h2>
+  <p>Four synthetic damage cases of increasing difficulty were used in the paper to compare four methods head to head: conventional FWI, NN-based FWI, conventional FWI seeded with the pretrained network's guess, and the full transfer learning NN-based FWI. The clearest of the four to walk through is Case 3 — three ellipses of different sizes and orientations.</p>
 
   <div class="case-block">
-    <h3 id="case1">Case 1 — a single ellipse</h3>
-    <p>Close to the training distribution by design. Conventional FWI recovers the damage within 10 iterations but with persistent artifacts. NN-based FWI does the same with far fewer artifacts. Transfer learning NN-based FWI is the fastest of all: an accurate shape emerges within just <strong>5 iterations</strong>.</p>
-    <figure>
-      <img src="../assets/paper-figs/fig7_case1.png" alt="Comparison grid for case 1 across four methods and iterations 1, 5, 10, 35">
-      <figcaption><strong>Fig. 7</strong> — Case 1 across iterations 1, 5, 10, 35, for all four methods, against the target.</figcaption>
-    </figure>
-  </div>
-
-  <div class="case-block">
-    <h3 id="case2">Case 2 — an unseen rectangular shape</h3>
-    <p>A square hole beside a circular one — the training set only ever contained ellipses, so this tests generalization to a shape the network never saw. Conventional FWI needs ~20 iterations and still shows artifacts above the rectangle. Transfer learning NN-based FWI reaches a near-perfect, artifact-free reconstruction within 10 iterations.</p>
-    <figure>
-      <img src="../assets/paper-figs/fig8_case2.png" alt="Comparison grid for case 2, a square and circular defect, across four methods and iterations">
-      <figcaption><strong>Fig. 8</strong> — Case 2: a square-shaped hole next to a circular one, a shape combination absent from training.</figcaption>
-    </figure>
-  </div>
-
-  <div class="case-block">
-    <h3 id="case3">Case 3 — three ellipses of different sizes</h3>
     <p>Conventional FWI can only roughly recover the rightmost void within 35 iterations and misses the other two. NN-based FWI recovers one shape but struggles with the rest. Transfer learning NN-based FWI locates all three within 20 iterations and keeps refining their shape afterward, with negligible artifacts.</p>
-    <figure>
+    <figure class="fig-compact">
       <img src="../assets/paper-figs/fig9_case3.png" alt="Comparison grid for case 3, three elliptical holes of different sizes, across four methods and iterations">
-      <figcaption><strong>Fig. 9</strong> — Case 3: three ellipses of different sizes and orientations.</figcaption>
+      <figcaption><strong>Fig. 9</strong> — Case 3: three ellipses of different sizes and orientations, compared across all four methods and iterations 1, 10, 20, 35.</figcaption>
     </figure>
   </div>
-
-  <div class="case-block">
-    <h3 id="case4">Case 4 — where transfer learning struggles</h3>
-    <p>A deliberately adversarial case: two intersecting rectangles plus three circular holes of shrinking radius along a line, plus two more circles off to the sides — six separate damages, nothing like the single-void training data. Here transfer learning NN-based FWI recovers only the rectangular shape and misses the rest within 35 iterations (though it does eventually recover the side circles after 55). Plain NN-based FWI, without any pretraining bias to overcome, actually wins this one case — a useful reminder that pretraining is a strong prior, not a free lunch, when the real damage is very unlike the training distribution.</p>
-    <figure>
-      <img src="../assets/paper-figs/fig10_case4.png" alt="Comparison grid for case 4, a hand-constructed adversarial arrangement of six damages, across four methods and iterations">
-      <figcaption><strong>Fig. 10</strong> — Case 4: a hand-built worst case with six separate damages.</figcaption>
-    </figure>
-  </div>
-
-  <h3 id="quantitative">Averaged over 100 test cases</h3>
-  <p>Beyond the four illustrative cases, all four methods were run on 100 held-out single-ellipse test cases for 35 iterations each, tracking cost and mean squared error (MSE) at every step.</p>
-  <figure>
-    <img src="../assets/paper-figs/fig11_quant.png" alt="Line charts of normalized cost and normalized MSE over 35 iterations, averaged over 100 test cases, for all four methods">
-    <figcaption><strong>Fig. 11</strong> — Normalized cost (left) and normalized MSE (right) averaged over 100 test cases. Transfer learning NN-based FWI has the lowest MSE throughout; its cost is comparable to plain NN-based FWI by iteration 35, but it gets there faster.</figcaption>
-  </figure>
-  <p>One subtlety: NN-based FWI's average <em>cost</em> ends up slightly lower than transfer learning's, yet its average <em>MSE</em> is higher. That's because NN-based FWI's predicted "undamaged" background settles around 0.8–0.85 instead of 1.0 — it finds the void shapes but gets the background value slightly wrong, which the cost function barely penalizes but MSE does.</p>
-
-  <h3 id="robustness">Recovering from a bad initial guess</h3>
-  <p>What if the pretrained network's first guess is simply wrong — because the real damage looks nothing like the training data? Revisiting Case 2 with a manually corrupted initial guess, the method needed roughly 70 iterations instead of 10, but still converged to an accurate reconstruction. More complex cases (like Case 3 and 4) recovered less completely even with more iterations — pretraining helps most when it isn't fighting an actively misleading starting point.</p>
-  <figure>
-    <img src="../assets/paper-figs/fig12_badguess.png" alt="Recovery sequence from a manually set bad initial guess, iterations 1, 15, 29, 43, 57, 71, 85, 100, versus the target">
-    <figcaption><strong>Fig. 12</strong> — Transfer learning NN-based FWI recovering from a deliberately bad initial guess over 100 iterations.</figcaption>
-  </figure>
 
   <h3>Training and optimization hyperparameters</h3>
   <table class="data">
     <tr><th>Hyperparameter</th><th>Transfer learning NN-FWI</th><th>Conv. FWI + NN guess</th><th>NN-based FWI</th><th>Conventional FWI</th></tr>
+
     <tr><td>Learning rate</td><td>5×10⁻⁴</td><td>5×10⁻²</td><td>5×10⁻⁴</td><td>8×10⁻²</td></tr>
     <tr><td>Gradient clipping</td><td>1×10⁻⁵</td><td>1×10⁻⁵</td><td>5×10⁻⁵</td><td>1×10⁻⁵</td></tr>
     <tr><td>Cost scaling</td><td>1×10¹⁰</td><td>1×10¹²</td><td>1×10⁸</td><td>1×10¹²</td></tr>
