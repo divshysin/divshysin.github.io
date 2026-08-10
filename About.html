@@ -20,6 +20,28 @@
   #affiliations .aff-role{ color:var(--text-dim); font-size:13px; }
   #about p{ font-size:16px; color:var(--text-dim); max-width:64ch; }
   #about p strong{ color:var(--text); font-weight:500; }
+
+  #personal .card p{ color:var(--text-dim); font-size:14.5px; margin:0 0 16px; }
+  .gallery{
+    display:grid; grid-template-columns:repeat(auto-fill, minmax(140px,1fr));
+    gap:10px;
+  }
+  .gallery img{
+    width:100%; aspect-ratio:1/1; object-fit:cover;
+    border-radius:8px; border:1px solid var(--line);
+    background:var(--bg-panel-2); cursor:zoom-in;
+    transition:opacity .2s ease;
+  }
+  .gallery img:hover{ opacity:0.85; }
+  .gallery-empty{ color:var(--text-dim); font-size:13px; font-style:italic; }
+
+  .lightbox{
+    position:fixed; inset:0; background:rgba(10,12,16,0.92);
+    display:none; align-items:center; justify-content:center;
+    z-index:100; padding:40px; cursor:zoom-out;
+  }
+  .lightbox.open{ display:flex; }
+  .lightbox img{ max-width:100%; max-height:100%; border-radius:8px; }
 </style>
 </head>
 <body>
@@ -40,15 +62,19 @@
   <section id="personal">
     <p class="eyebrow mono">Ch.03 — Personal</p>
     <h2>Off the clock</h2>
-    <div class="duo">
-      <div class="card">
-        <h3>Table tennis</h3>
-        <p>I play at an intermediate club level, with an aggressive, attacking style.</p>
-      </div>
-      <div class="card">
-        <h3>Plants</h3>
-        <p>I keep plants at home and enjoy looking after them.</p>
-      </div>
+    <div class="card" style="margin-bottom:20px;">
+      <h3>Mushroom documentation</h3>
+      <p>I document mushrooms I come across on hikes — identification, habitat, season.</p>
+      <div class="gallery" id="gallery-mushrooms"></div>
+    </div>
+    <div class="card" style="margin-bottom:20px;">
+      <h3>Nature photography</h3>
+      <p>Photos from time outdoors, mostly forests and trails.</p>
+      <div class="gallery" id="gallery-nature"></div>
+    </div>
+    <div class="card">
+      <h3>Table tennis</h3>
+      <p>I play at an intermediate club level, with an aggressive, attacking style.</p>
     </div>
   </section>
 
@@ -70,6 +96,8 @@
 
 </main>
 
+<div class="lightbox" id="lightbox"><img id="lightbox-img" src="" alt=""></div>
+
 <footer>
   <span>© 2026 Divya Shyam Singh</span>
   <span>TUM · Full Waveform Inversion</span>
@@ -80,6 +108,39 @@
   const menu = document.getElementById('navMenu');
   toggle.addEventListener('click', () => menu.classList.toggle('open'));
   document.querySelectorAll('nav a').forEach(a => a.addEventListener('click', () => menu.classList.remove('open')));
+
+  async function loadGallery(folder, containerId){
+    const container = document.getElementById(containerId);
+    try {
+      const res = await fetch(`assets/${folder}/manifest.json`);
+      const files = await res.json();
+      if (!files.length){
+        container.innerHTML = '<p class="gallery-empty">No photos yet.</p>';
+        return;
+      }
+      container.innerHTML = files.map(name =>
+        `<img src="assets/${folder}/${name}" alt="${folder} photo" loading="lazy">`
+      ).join('');
+    } catch (e) {
+      container.innerHTML = '<p class="gallery-empty">Could not load photos.</p>';
+    }
+  }
+  loadGallery('mushrooms', 'gallery-mushrooms');
+  loadGallery('nature', 'gallery-nature');
+
+  const lightbox = document.getElementById('lightbox');
+  const lightboxImg = document.getElementById('lightbox-img');
+  document.addEventListener('click', (e) => {
+    if (e.target.closest('.gallery') && e.target.tagName === 'IMG'){
+      lightboxImg.src = e.target.src;
+      lightbox.classList.add('open');
+    } else if (e.target === lightbox){
+      lightbox.classList.remove('open');
+    }
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') lightbox.classList.remove('open');
+  });
 </script>
 
 </body>
