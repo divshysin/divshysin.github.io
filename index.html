@@ -10,7 +10,7 @@
 <link rel="stylesheet" href="styles.css">
 <style>
   #hero{
-    min-height:100vh; padding-top:110px; padding-bottom:60px;
+    min-height:100vh; padding-top:10px; padding-bottom:20px;
     border-bottom:none; position:relative;
     display:block;
   }
@@ -39,11 +39,30 @@
     100%{ transform:translateX(0); }
   }
   .hero-photo .photo-frame{
-    position:relative; z-index:1;
-    width:100%; aspect-ratio:4/5; object-fit:cover; display:block;
-    border-radius:14px; border:1px solid var(--line-strong);
-    background:var(--bg-panel);
-  }
+  position:relative; z-index:1;
+  width:100%; height:auto; display:block;
+  background:var(--bg-panel);
+}
+Just delete aspect-ratio:16/6; object-fit:cover; and add height:auto. Now the image keeps its natural proportions — whatever height that produces at full viewport width, with nothing cut off.
+
+If you actually mean literal pixel size (e.g., a 1200×800 photo shows as exactly 1200×800, not stretched to the screen)
+
+That contradicts the full-width goal from before, since a photo's native pixel width is fixed but screens vary. If this is really what you want, replace the full-bleed rule instead:
+
+css
+.hero-photo .photo-frame{
+  width:auto;
+  max-width:100%;
+  height:auto;
+  display:block;
+  margin:0 auto;
+}
+This shows it at native size on large screens, but still shrinks it (never enlarges it) on smaller screens so it doesn't overflow.
+
+For most personal-site purposes, the first option (full-width, uncropped, natural proportions) is what people mean by "keep it as the original" — it just means don't let the aspect-ratio/object-fit rules distort or slice the photo.
+
+
+
 
   #work{ border-bottom:none; padding-bottom:100px; padding-top:60px; }
   #work .lede-strip{ color:var(--text-dim); font-size:15px; max-width:62ch; margin:-14px 0 28px; }
