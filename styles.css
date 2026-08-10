@@ -30,7 +30,7 @@ header{
   backdrop-filter:blur(8px);
   border-bottom:1px solid var(--line);
 }
-header .mark{ font-family:'Fraunces', serif; font-size:18px; font-weight:600; color:var(--text); text-decoration:none; }
+header .mark{ font-family:'Fraunces', serif; font-size:16px; font-weight:600; color:var(--text); text-decoration:none; white-space:nowrap; }
 header .mark span{ color:var(--amber); }
 nav{ display:flex; gap:28px; }
 nav a{
@@ -72,6 +72,7 @@ footer{
 
 @media (max-width:720px){
   header{ padding:16px 20px; }
+  header .mark{ font-size:14px; }
   nav{
     position:fixed; top:58px; left:0; right:0; background:var(--bg);
     flex-direction:column; gap:0; border-bottom:1px solid var(--line);
