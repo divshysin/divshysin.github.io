@@ -38,18 +38,22 @@
 
   #work{ border-bottom:none; padding-bottom:100px; padding-top:60px; }
   #work .lede-strip{ color:var(--text-dim); font-size:15px; max-width:62ch; margin:-14px 0 28px; }
-  .work-more{
-    margin-top:28px; display:flex; align-items:center; justify-content:space-between;
-    background:var(--bg-panel-2); border:1px solid var(--line-strong);
-    border-radius:10px; padding:20px 24px; gap:20px; flex-wrap:wrap;
+  .pub-heading{ font-family:'Fraunces', serif; font-weight:500; font-size:19px; margin:44px 0 6px; }
+  .pub-list{ display:flex; flex-direction:column; }
+  .pub-item{ padding:18px 0; border-bottom:1px solid var(--line); }
+  .pub-item:last-child{ border-bottom:none; }
+  .pub-cite{
+    margin:0; color:var(--text-dim); font-size:13.5px; line-height:1.7;
+    padding-left:1.6em; text-indent:-1.6em;
   }
-  .work-more p{ margin:0; color:var(--text-dim); font-size:14px; max-width:44ch; }
-  .work-more a{
-    flex:0 0 auto; display:inline-flex; align-items:center; gap:8px;
-    background:var(--amber); color:#1a1206; font-weight:500; text-decoration:none;
-    font-size:14px; padding:10px 18px; border-radius:8px;
+  .pub-cite em{ color:var(--text); font-style:italic; }
+  .pub-cite a{ color:var(--teal); word-break:break-all; }
+  .pub-walkthrough{
+    display:inline-block; margin-top:10px; margin-left:1.6em;
+    font-size:13px; color:var(--amber); text-decoration:none;
+    border-bottom:1px solid var(--amber);
   }
-  .more-pages{ display:flex; gap:14px; margin-top:14px; }
+  .more-pages{ display:flex; gap:14px; margin-top:36px; }
   .more-pages a{ color:var(--text-dim); text-decoration:none; font-size:12px; border-bottom:1px solid var(--line-strong); }
   .more-pages a:hover{ color:var(--text); border-color:var(--amber); }
 
@@ -80,36 +84,32 @@
 
     <div class="hero-text">
       <p class="eyebrow mono">Ch.01 — Welcome</p>
-      <h1>I find <em>cracks</em> hidden in concrete.</h1>
-      <p class="lede">PhD researcher at TUM. I use physics and neural networks to read sound waves and find damage that isn't visible from outside.</p>
+      <h1>Where are the <em>cracks</em> at?</h1>
+      <p class="lede">PhD researcher at TUM. Physics-based and data-driven wave inversion for locating internal damage in solid structures.</p>
       <div class="hero-tags">
         <span class="tag">FWI</span>
         <span class="tag">TUM</span>
-        <span class="tag">Concrete NDT</span>
+        <span class="tag">Structural NDT</span>
       </div>
     </div>
   </section>
 
   <section id="work">
     <p class="eyebrow mono">Ch.02 — Work</p>
-    <h2>Full waveform inversion for concrete</h2>
-    <p class="lede-strip">My PhD work combines physics and deep learning to test concrete without breaking it open.</p>
+    <h2>Full waveform inversion for solid structures</h2>
+    <p class="lede-strip">Physics-based and neural-network-based inversion of elastic and acoustic wavefields for internal damage localization.</p>
     <div class="card-grid">
       <div class="card">
-        <h3>Finding damage with waves</h3>
-        <p>I send sound waves through concrete and study how they change. Those changes point to where the damage is, without needing to see it directly.</p>
+        <h3>Wave-based damage detection</h3>
+        <p>Damage is localized by inverting how elastic and acoustic waves scatter as they propagate through a structure, without direct access to the affected region.</p>
       </div>
       <div class="card">
-        <h3>Physics plus learning</h3>
-        <p>I combine classic physics methods with a neural network that helps map out the damage more accurately.</p>
+        <h3>Physics-informed learning</h3>
+        <p>Adjoint-based inversion is combined with neural network parametrizations to regularize the reconstruction and accelerate convergence.</p>
       </div>
       <div class="card">
-        <h3>Simulation platform</h3>
-        <p>I run my simulations on Salvus, a tool built for modeling how waves travel through materials.</p>
-      </div>
-      <div class="card">
-        <h3>Engineering roots</h3>
-        <p>My background is in mechanical and civil engineering, which shapes how I think about structures and materials.</p>
+        <h3>Engineering foundation</h3>
+        <p>Methods build on mechanical and civil engineering: structural dynamics, finite element and spectral element discretizations.</p>
       </div>
     </div>
     <div class="tag-row">
@@ -117,14 +117,30 @@
       <span class="tag">adjoint-state</span>
       <span class="tag">WRI</span>
       <span class="tag">GNN</span>
-      <span class="tag">Salvus / SEM</span>
+      <span class="tag">spectral element method</span>
       <span class="tag">non-destructive testing</span>
     </div>
 
-    <div class="work-more">
-      <p>One paper from this work shows how to give the search a head start using a pretrained network — full write-up with figures from the paper.</p>
-      <a href="work/transfer-learning-fwi.html">Read the paper walkthrough →</a>
+    <h3 class="pub-heading">Publications</h3>
+    <div class="pub-list">
+      <div class="pub-item">
+        <p class="pub-cite">Singh, D. S., Herrmann, L., Bürchner, T., Dietrich, F., &amp; Kollmannsberger, S. (2026). Graph neural networks for full waveform inversion. <em>Computational Mechanics</em>, 1–17. <a href="https://doi.org/10.1007/s00466-026-02796-5" target="_blank" rel="noopener">https://doi.org/10.1007/s00466-026-02796-5</a></p>
+      </div>
+      <div class="pub-item">
+        <p class="pub-cite">Singh, D. S., Herrmann, L., Sun, Q., Bürchner, T., Dietrich, F., &amp; Kollmannsberger, S. (2025). Accelerating full waveform inversion by transfer learning. <em>Computational Mechanics</em>, 76, 323–344. <a href="https://doi.org/10.1007/s00466-025-02600-w" target="_blank" rel="noopener">https://doi.org/10.1007/s00466-025-02600-w</a></p>
+        <a class="pub-walkthrough" href="work/transfer-learning-fwi.html">Read the walkthrough →</a>
+      </div>
+      <div class="pub-item">
+        <p class="pub-cite">Singh, D. S., Chowdary, G. B. L., &amp; Roy Mahapatra, D. (2023). Hierarchical neural network and simulation based structural defect identification and classification. <em>Structural Control and Health Monitoring</em>, 2023, Article 3555133. <a href="https://doi.org/10.1155/2023/3555133" target="_blank" rel="noopener">https://doi.org/10.1155/2023/3555133</a></p>
+      </div>
+      <div class="pub-item">
+        <p class="pub-cite">Singh, D., Agrawal, A., &amp; Roy Mahapatra, D. (2023). A reduced-order modeling framework for simulating signatures of faults in a bladed disk. <em>SAE International Journal of Aerospace</em>, 16(1), 87–108. <a href="https://doi.org/10.4271/01-16-01-0006" target="_blank" rel="noopener">https://doi.org/10.4271/01-16-01-0006</a></p>
+      </div>
+      <div class="pub-item">
+        <p class="pub-cite">Vu, G., Timothy, J. J., Singh, D. S., Saydak, L. A., Saenger, E. H., &amp; Meschke, G. (2021). Numerical simulation-based damage identification in concrete. <em>Modelling</em>, 2(3), 355–369. <a href="https://doi.org/10.3390/modelling2030019" target="_blank" rel="noopener">https://doi.org/10.3390/modelling2030019</a></p>
+      </div>
     </div>
+
     <div class="more-pages">
       <a href="about.html#personal">Personal</a>
       <a href="about.html#affiliations">Affiliations</a>
