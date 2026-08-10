@@ -66,7 +66,7 @@
 <body>
 
 <header>
-  <a href="../index.html" class="mark">Shyam<span>.</span></a>
+  <a href="../index.html" class="mark">Divya Shyam <span>Singh</span></a>
   <button class="nav-toggle mono" id="navToggle" aria-label="Toggle menu">Menu</button>
   <nav id="navMenu">
     <a href="../index.html#work">Work</a>
@@ -110,7 +110,7 @@
     <p>Full waveform inversion (FWI) reconstructs a material field from sparse wave measurements. Parameterizing that field with a neural network — NN-based FWI — improves the robustness and quality of the resulting optimization problem, but a poor starting point for the network's weights still slows convergence and can land the search in a physically meaningless local minimum. This paper introduces a transfer learning scheme: a network is pretrained to map the adjoint gradient from a single conventional-FWI iteration onto the true material field, using a training set of two-dimensional simulations with randomly placed elliptical voids that mimic phased-array ultrasonic testing. Starting NN-based FWI from these pretrained weights, rather than random ones, converges faster and lands on more physically meaningful reconstructions than conventional FWI, plain NN-based FWI, or conventional FWI seeded with the same pretrained guess.</p>
   </div>
 
-  <h2 id="motivation">Why this matters for concrete</h2>
+  <h2 id="motivation">Why this matters for solid structures</h2>
   <p>Civil infrastructure deteriorates from load cycles, temperature swings, natural disasters, and construction defects, and assessing that damage means testing it without breaking it open — non-destructive testing (NDT). FWI, originally built for imaging the Earth's interior in seismology, has been adapted to NDT: send ultrasonic waves through a structure, and fit a simulated wavefield to what the sensors actually measured. The catch is that FWI is an ill-posed, computationally expensive inverse problem — extracting precise damage location and severity from it is genuinely hard.</p>
   <p>Neural networks have been used to help in a few ways: predicting the material field directly from sensor data (needs large labeled datasets and offers no accuracy guarantee), enriching signals with missing low-frequency content, or — the approach this paper builds on — using an overparameterized network simply as a <em>reparametrization</em> of the material field itself. That last idea, <strong>NN-based FWI</strong>, uses the network's own bias toward smooth, low-frequency solutions as an implicit regularizer, which is what keeps the reconstruction free of high-frequency artifacts. This paper's contribution is to give that network a much better starting point through pretraining, rather than starting it from random weights.</p>
 
