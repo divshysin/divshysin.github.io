@@ -87,3 +87,37 @@ footer{
   footer{ flex-direction:column; gap:8px; }
 }
 @media (prefers-reduced-motion: reduce){ html{ scroll-behavior:auto; } }
+
+.edge-waves{
+  position:fixed; top:0; left:0; bottom:0;
+  width:120px; pointer-events:none; z-index:1;
+  overflow:hidden;
+}
+.edge-waves svg{
+  position:absolute; left:-30%; width:160%; height:200%;
+}
+.edge-waves .w1, .edge-waves .w2, .edge-waves .w3, .edge-waves .w4{
+  animation:wave-drift linear infinite;
+}
+.edge-waves path.w1, .edge-waves path.w2, .edge-waves path.w3, .edge-waves path.w4{
+  fill:none;
+}
+.edge-waves circle.w1, .edge-waves circle.w2, .edge-waves circle.w3, .edge-waves circle.w4{
+  stroke:none;
+}
+.edge-waves .w1{ stroke:var(--teal); fill:var(--teal); opacity:0.5; stroke-width:2.5; animation-duration:22s; }
+.edge-waves .w2{ stroke:#5b7fd9; fill:#5b7fd9; opacity:0.4; stroke-width:2; animation-duration:30s; animation-delay:-6s; }
+.edge-waves .w3{ stroke:#9b7fd4; fill:#9b7fd4; opacity:0.35; stroke-width:1.5; animation-duration:26s; animation-direction:reverse; animation-delay:-12s; }
+.edge-waves .w4{ stroke:#4fc7c3; fill:#4fc7c3; opacity:0.3; stroke-width:1.5; animation-duration:34s; animation-delay:-3s; }
+
+@keyframes wave-drift{
+  from{ transform:translateY(-50%); }
+  to{ transform:translateY(0%); }
+}
+
+@media (max-width:720px){
+  .edge-waves{ width:56px; }
+}
+@media (prefers-reduced-motion: reduce){
+  .edge-waves path{ animation:none !important; }
+}
