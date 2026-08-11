@@ -17,6 +17,7 @@ body{
   color:var(--text);
   font-family:'Inter', system-ui, sans-serif;
   line-height:1.65;
+  position:relative;
 }
 ::selection{ background:var(--amber); color:#10141a; }
 a{ color:inherit; }
