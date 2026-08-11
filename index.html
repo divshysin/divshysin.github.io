@@ -67,6 +67,18 @@
     .hero-photo{ max-width:280px; margin:0 auto 8px; }
   }
 
+  #explainers .lede-strip{ color:var(--text-dim); font-size:15px; max-width:62ch; margin:-14px 0 28px; }
+  .explainer-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:20px; }
+  .explainer-card{
+    background:var(--bg-panel); border:1px solid var(--line);
+    border-radius:10px; padding:22px 24px; text-decoration:none;
+    display:block; transition:border-color .2s ease;
+  }
+  .explainer-card:hover{ border-color:var(--amber); }
+  .explainer-card h3{ font-family:'Fraunces', serif; font-weight:500; font-size:17px; margin:0 0 8px; color:var(--text); }
+  .explainer-card p{ color:var(--text-dim); font-size:14.5px; margin:0; }
+  @media (max-width:720px){ .explainer-grid{ grid-template-columns:1fr; } }
+
   #affiliations .aff-row{
     display:flex; justify-content:space-between; align-items:baseline;
     gap:16px; padding:18px 0; border-bottom:1px solid var(--line);
@@ -99,6 +111,7 @@
   <button class="nav-toggle mono" id="navToggle" aria-label="Toggle menu">Menu</button>
   <nav id="navMenu">
     <a href="#hero">Work</a>
+    <a href="#explainers">Explainers</a>
     <a href="#affiliations">Affiliations</a>
     <a href="#about">About</a>
     <a href="#personal">Personal</a>
@@ -167,8 +180,32 @@
     </div>
   </section>
 
+  <section id="explainers">
+    <p class="eyebrow mono">Ch.02 — Explainers</p>
+    <h2>Notes on the ideas behind the work</h2>
+    <p class="lede-strip">Write-ups on methods and ideas I find worth explaining, from graph learning to optimization.</p>
+    <div class="explainer-grid">
+      <a class="explainer-card" href="explainers/graph-neural-networks.html">
+        <h3>Graph neural networks</h3>
+        <p>How message passing on graphs generalizes convolution to unstructured domains.</p>
+      </a>
+      <a class="explainer-card" href="explainers/nn-parameterization-optimization.html">
+        <h3>Neural network parameterization for optimization</h3>
+        <p>Reparametrizing an optimization variable with a network as an implicit regularizer.</p>
+      </a>
+      <a class="explainer-card" href="explainers/relaxed-adjoint-optimization.html">
+        <h3>Relaxed adjoint optimization</h3>
+        <p>Loosening the adjoint-state method's exactness for cheaper, more robust gradients.</p>
+      </a>
+      <a class="explainer-card" href="explainers/relaxed-nn-training.html">
+        <h3>Relaxed training of neural networks</h3>
+        <p>What changes when training objectives or constraints are relaxed during optimization.</p>
+      </a>
+    </div>
+  </section>
+
   <section id="affiliations">
-    <p class="eyebrow mono">Ch.02 — Affiliations</p>
+    <p class="eyebrow mono">Ch.03 — Affiliations</p>
     <h2>Where this work lives</h2>
     <div class="aff-row">
       <div class="aff-main">
@@ -201,13 +238,13 @@
   </section>
 
   <section id="about">
-    <p class="eyebrow mono">Ch.03 — About</p>
+    <p class="eyebrow mono">Ch.04 — About</p>
     <h2>The short version</h2>
     <p>I'm <strong>Shyam</strong>. I trained as an engineer and now work on wave physics and machine learning. My days go into finding hidden damage in solid structures. My free time goes into table tennis and looking after my plants.</p>
   </section>
 
   <section id="personal">
-    <p class="eyebrow mono">Ch.04 — Personal</p>
+    <p class="eyebrow mono">Ch.05 — Personal</p>
     <h2>Off the clock</h2>
     <div class="card">
       <p>Mushroom documentation, nature photography, and table tennis.</p>

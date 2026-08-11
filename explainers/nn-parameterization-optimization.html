@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Neural network parameterization for optimization — Divya Shyam Singh</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../styles.css">
+<style>
+  main{ max-width:820px; }
+  section{ padding:0; border-bottom:none; }
+  article{ padding:150px 0 100px; }
+  .paper-head{ padding-bottom:40px; border-bottom:1px solid var(--line); margin-bottom:48px; }
+  .paper-head .eyebrow{ margin-bottom:16px; }
+  .paper-head h1{ font-family:'Fraunces', serif; font-weight:500; font-size:clamp(26px,4vw,36px); line-height:1.25; margin:0 0 18px; }
+  .back-link{ font-size:12px; color:var(--text-dim); text-decoration:none; }
+  .back-link:hover{ color:var(--text); }
+  .coming-soon{ color:var(--text-dim); font-size:15.5px; max-width:60ch; }
+</style>
+</head>
+<body>
+
+<header>
+  <a href="../index.html" class="mark">Divya Shyam <span>Singh</span></a>
+  <button class="nav-toggle mono" id="navToggle" aria-label="Toggle menu">Menu</button>
+  <nav id="navMenu">
+    <a href="../index.html#hero">Work</a>
+    <a href="../index.html#explainers">Explainers</a>
+    <a href="../index.html#affiliations">Affiliations</a>
+    <a href="../index.html#about">About</a>
+    <a href="../personal.html">Personal</a>
+  </nav>
+</header>
+
+<main>
+<article>
+
+  <a class="back-link mono" href="../index.html#explainers">← Back to explainers</a>
+
+  <div class="paper-head" style="margin-top:22px;">
+    <p class="eyebrow mono">Explainer</p>
+    <h1>Neural network parameterization for optimization</h1>
+  </div>
+
+  <p class="coming-soon">Write-up in progress.</p>
+
+</article>
+</main>
+
+<footer>
+  <span>© 2026 Divya Shyam Singh</span>
+  <span>TUM · Full Waveform Inversion</span>
+</footer>
+
+<script>
+  const toggle = document.getElementById('navToggle');
+  const menu = document.getElementById('navMenu');
+  toggle.addEventListener('click', () => menu.classList.toggle('open'));
+  document.querySelectorAll('nav a').forEach(a => a.addEventListener('click', () => menu.classList.remove('open')));
+</script>
+
+</body>
+</html>
