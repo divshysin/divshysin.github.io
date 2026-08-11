@@ -8,7 +8,6 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../styles.css?v=20260811c">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
 <style>
   main{ max-width:820px; }
   section{ padding:0; border-bottom:none; }
@@ -35,27 +34,12 @@
   .abstract p{ margin:0; }
   .abstract .eyebrow{ margin-bottom:10px; }
 
-  .eq{ background:var(--bg-panel); border:1px solid var(--line); border-radius:8px; padding:16px 20px; margin:0 0 20px; overflow-x:auto; }
-  .eq-row{ display:flex; justify-content:space-between; align-items:center; gap:16px; }
-  .eq-num{ color:var(--text-dim); font-family:'IBM Plex Mono',monospace; font-size:12px; flex:0 0 auto; }
-
   figure{ margin:28px 0 32px; }
   figure img{ width:100%; height:auto; display:block; border-radius:8px; border:1px solid var(--line); background:#fff; }
   figcaption{ font-size:13px; color:var(--text-dim); margin-top:10px; line-height:1.55; }
   figcaption strong{ color:var(--text); }
-  figure.fig-compact{ max-width:520px; margin-left:auto; margin-right:auto; }
+  figure.fig-compact{ max-width:480px; margin-left:auto; margin-right:auto; }
 
-  table.data{ width:100%; border-collapse:collapse; margin:0 0 24px; font-size:13.5px; }
-  table.data th, table.data td{ text-align:left; padding:8px 12px; border-bottom:1px solid var(--line); }
-  table.data th{ color:var(--text); font-family:'IBM Plex Mono', monospace; font-size:11px; text-transform:uppercase; letter-spacing:0.03em; font-weight:500; }
-  table.data td{ color:var(--text-dim); }
-  table.data td:first-child, table.data th:first-child{ color:var(--text); }
-
-  .toc{ display:flex; flex-wrap:wrap; gap:10px 18px; margin:0 0 8px; padding:0; list-style:none; }
-  .toc a{ color:var(--text-dim); text-decoration:none; font-size:12.5px; border-bottom:1px solid transparent; }
-  .toc a:hover{ color:var(--text); border-color:var(--amber); }
-
-  .case-block{ margin-bottom:52px; padding-bottom:8px; }
   .back-link{ font-size:12px; color:var(--text-dim); text-decoration:none; }
   .back-link:hover{ color:var(--text); }
 
@@ -117,137 +101,63 @@
     </div>
   </div>
 
-  <ul class="toc mono">
-    <li><a href="#abstract">Abstract</a></li>
-    <li><a href="#motivation">Motivation</a></li>
-    <li><a href="#model">Physical model</a></li>
-    <li><a href="#conventional">Conventional FWI</a></li>
-    <li><a href="#nn-based">NN-based FWI</a></li>
-    <li><a href="#transfer">Transfer learning</a></li>
-    <li><a href="#results">Results</a></li>
-    <li><a href="#limitations">Limitations</a></li>
-    <li><a href="#cite">Cite this</a></li>
-  </ul>
-
   <div class="abstract" id="abstract">
-    <p class="eyebrow mono" style="margin-bottom:10px;">Abstract</p>
-    <p>Full waveform inversion (FWI) reconstructs a material field from sparse wave measurements. Parameterizing that field with a neural network — NN-based FWI — improves the robustness and quality of the resulting optimization problem, but a poor starting point for the network's weights still slows convergence and can land the search in a physically meaningless local minimum. This paper introduces a transfer learning scheme: a network is pretrained to map the adjoint gradient from a single conventional-FWI iteration onto the true material field, using a training set of two-dimensional simulations with randomly placed elliptical voids that mimic phased-array ultrasonic testing. Starting NN-based FWI from these pretrained weights, rather than random ones, converges faster and lands on more physically meaningful reconstructions than conventional FWI, plain NN-based FWI, or conventional FWI seeded with the same pretrained guess.</p>
+    <p class="eyebrow mono" style="margin-bottom:10px;">Abstract, condensed</p>
+    <p>Parametrizing FWI's material field with a neural network already regularizes the reconstruction — but a randomly initialized network still converges slowly and can land on a physically meaningless result. This paper pretrains the network to map a single adjoint gradient onto the true material field, using synthetic 2D voids. Starting FWI from those pretrained weights converges faster and reconstructs more accurately than conventional FWI, plain NN-based FWI, or conventional FWI seeded with the same pretrained guess.</p>
   </div>
 
-  <h2 id="motivation">Why this matters for solid structures</h2>
-  <p>Civil infrastructure deteriorates from load cycles, temperature swings, natural disasters, and construction defects, and assessing that damage means testing it without breaking it open — non-destructive testing (NDT). FWI, originally built for imaging the Earth's interior in seismology, has been adapted to NDT: send ultrasonic waves through a structure, and fit a simulated wavefield to what the sensors actually measured. The catch is that FWI is an ill-posed, computationally expensive inverse problem — extracting precise damage location and severity from it is genuinely hard.</p>
-  <p>Neural networks have been used to help in a few ways: predicting the material field directly from sensor data (needs large labeled datasets and offers no accuracy guarantee), enriching signals with missing low-frequency content, or — the approach this paper builds on — using an overparameterized network simply as a <em>reparametrization</em> of the material field itself. That last idea, <strong>NN-based FWI</strong>, uses the network's own bias toward smooth, low-frequency solutions as an implicit regularizer, which is what keeps the reconstruction free of high-frequency artifacts. This paper's contribution is to give that network a much better starting point through pretraining, rather than starting it from random weights.</p>
-
-  <h2 id="model">Physical model</h2>
-  <p>The setup uses the 2D scalar wave equation. A dimensionless scaling function <span id="gamma-inline"></span> scales the background density <span id="rho-inline"></span> so that the density becomes <span id="rho-x-inline"></span> while the wave speed stays fixed at <span id="c0-inline"></span>:</p>
-  <div class="eq">
-    <div class="eq-row">
-      <div>$$\gamma(x)\rho_0\,\ddot u(x,t) - \nabla\cdot\big(\gamma(x)\rho_0 c_0^2 \nabla u(x,t)\big) = f(x,t), \quad x\in\Omega,\ t\in T$$</div>
-      <span class="eq-num">(1)–(2)</span>
-    </div>
-  </div>
-  <p>γ = 1 is undamaged material and γ → 0 marks a void. Mono-parameter inversion — recovering only γ while holding wave speed fixed — was chosen deliberately: scaling the wave speed instead causes oscillations at void interfaces that distort the gradient and pull the optimizer toward physically meaningless minima.</p>
+  <h2 id="motivation">Why this matters</h2>
+  <p>FWI adapted from seismology to ultrasonic non-destructive testing: send waves through a structure, fit a simulated wavefield to what sensors measured, and iteratively update the material field. It's a powerful but ill-posed, expensive inverse problem. Parametrizing the material field with a neural network instead of raw grid coefficients — <strong>NN-based FWI</strong> — helps: networks have a built-in bias toward smooth, low-frequency solutions, which acts as an implicit regularizer and suppresses the high-frequency artifacts that plague conventional FWI. This paper's contribution is giving that network a much better starting point through pretraining, instead of random weights.</p>
 
   <figure>
     <img src="../assets/paper-figs/fig1_setup.png" alt="2D domain setup with sensor and source positions, and the two-cycle sine burst excitation signal">
-    <figcaption><strong>Fig. 1</strong> — (a) The 2D domain: sources and sensors sit along the top edge; the ellipse marks a hidden void parameterized by its axes, center, and rotation angle. (b) The excitation is a two-cycle sine burst. The domain is 0.1 m × 0.05 m, undamaged density 2700 kg/m³, wave speed 6000 m/s, and the central excitation frequency is 500 kHz.</figcaption>
+    <figcaption><strong>Fig. 1</strong> — The 2D domain: sources and sensors along the top edge, a hidden elliptical void, and the two-cycle sine burst excitation used to probe it.</figcaption>
   </figure>
 
-  <h2 id="conventional">Conventional FWI</h2>
-  <p>Conventional FWI treats every finite-difference grid point's γ value as a free coefficient and minimizes a misfit functional summing the squared error between simulated and observed wavefields at every sensor, for every source experiment:</p>
-  <div class="eq">
-    <div class="eq-row">
-      <div>$$\mathcal{L}(\hat\gamma;u^o)=\frac12\int_T\sum_{s=1}^{N_s}\sum_{r=1}^{N_r}\big(\hat u_s(\hat\gamma;x,t)-u^o_s(x_r,t)\big)^2\,\delta(x-x_r)\;dx\,dt$$</div>
-      <span class="eq-num">(8)</span>
-    </div>
-  </div>
-  <p>The gradient with respect to each coefficient is obtained with the adjoint method — solve one more wave simulation backward in time with the residuals as sources, then combine the forward and adjoint wavefields:</p>
-  <div class="eq">
-    <div class="eq-row">
-      <div>$$\frac{d\mathcal{L}}{d\hat\gamma_i}=\sum_{s=1}^{N_s}\int_T\Big(-\rho_0\dot u^\dagger_{s,i}\dot u_{s,i}+\rho_0 c_0^2\,\nabla u^\dagger_{s,i}\cdot\nabla u_{s,i}\Big)dt$$</div>
-      <span class="eq-num">(9)</span>
-    </div>
-  </div>
-  <p>This gradient — computed after just the <em>first</em> iteration, starting from homogeneous material — is the key ingredient the rest of the paper builds on: it already contains a rough, blurry outline of where the damage is.</p>
+  <h2 id="nn-based">From grid coefficients to a network</h2>
+  <p>Conventional FWI treats every grid point's density-scaling value γ as a free coefficient, minimizing the squared error between simulated and observed wavefields via the adjoint method. NN-based FWI instead has a generator network predict those γ values from a fixed random input, with the network's weights — not the grid directly — being what gradient descent updates. Because the network is heavily overparameterized (526K parameters), that indirection is what supplies the implicit regularization.</p>
 
-  <h2 id="nn-based">NN-based FWI</h2>
-  <p>Instead of optimizing the grid coefficients directly, a generator-style network <span class="mono" style="text-transform:none;">N<sub>γ</sub></span> predicts them from a fixed random input tensor <em>k</em>:</p>
-  <div class="eq">
-    <div class="eq-row"><div>$$\hat\gamma(\theta)=N_\gamma(\theta;k),\qquad \theta^*=\underset{\theta}{\arg\min}\ \mathcal{L}(\hat\gamma(\theta);u^o)$$</div><span class="eq-num">(10)–(11)</span></div>
-  </div>
-  <p>The gradient with respect to the network's weights θ comes from the chain rule — the adjoint method supplies the first factor, automatic differentiation the second:</p>
-  <div class="eq">
-    <div class="eq-row"><div>$$\nabla_{\theta_j}\mathcal{L}(\hat\gamma;u^o)=\sum_i \nabla_{\hat\gamma_i}\mathcal{L}(\hat\gamma;u^o)\,\nabla_{\theta_j}\hat\gamma_i(\theta)$$</div><span class="eq-num">(12)</span></div>
-  </div>
   <figure>
     <img src="../assets/paper-figs/fig2_workflow.png" alt="Workflow diagram of NN-based FWI: random noise into a generator network, producing a density scaling function, fed into a forward solver, compared against the observed wavefield to compute a cost, whose gradient updates the generator's weights">
-    <figcaption><strong>Fig. 2</strong> — Workflow of NN-based FWI. The generator network turns random noise into a density scaling function, which a forward solver turns into a simulated wavefield; the cost against the observed wavefield produces a gradient that updates the network's weights.</figcaption>
+    <figcaption><strong>Fig. 2</strong> — NN-based FWI: a generator network turns noise into a density field, a forward solver simulates the wavefield, and the misfit against real measurements updates the network's weights.</figcaption>
   </figure>
-  <p>Because the network is heavily overparameterized (526,252 parameters mapping a 128×8×4 input up to a 1×256×128 output through five upsampling stages), gradient descent on its weights acts as an implicit regularizer — it has an inherent bias toward low spatial frequencies, so the reconstruction naturally comes out smoother and with fewer high-frequency artifacts than conventional FWI, even without adding any explicit regularization term.</p>
 
-  <h2 id="transfer">Transfer learning NN-based FWI</h2>
-  <p>NN-based FWI still starts from a random weight initialization, and that randomness matters: a bad starting point slows convergence and can settle on a plausible-looking but wrong reconstruction. The paper's core idea is to <strong>pretrain</strong> the network so its starting weights already encode a sensible prior about what damage looks like.</p>
-  <p>A U-Net (784,039 parameters, with skip connections to fight vanishing gradients) is trained in a fully supervised way: the input is the adjoint gradient from the very first iteration of conventional FWI — that quick, rough hint from Eq. 9 — and the target output is the true γ field used to generate the training sample. The training set is 800 samples, each with one randomly placed, randomly sized and rotated elliptical void (chosen because ellipses approximate the crack shapes seen in fracture mechanics, and because the setup mirrors phased-array ultrasonic testing).</p>
-  <div class="eq">
-    <div class="eq-row"><div>$$\mathcal{L}_D=\frac1N\sum_{k=1}^N \big\|\gamma^{true}_k-\hat\gamma_k\big\|_2^2$$</div><span class="eq-num">(13)</span></div>
-  </div>
+  <h2 id="transfer">Pretraining fixes the starting point</h2>
+  <p>NN-based FWI still starts from random weights, and a bad draw slows convergence or settles on a wrong-but-plausible reconstruction. The fix: pretrain a U-Net (784K parameters) in a fully supervised way — input is the adjoint gradient from just the <em>first</em> iteration of conventional FWI (a rough, blurry hint of where the damage is), target is the true γ field. 800 training samples, each a single randomly placed elliptical void.</p>
+
   <figure>
     <img src="../assets/paper-figs/fig3_unet.png" alt="U-Net pretraining diagram: initial adjoint gradient in, convolution and batch-norm blocks with skip connections, true density scaling function as the supervised target">
-    <figcaption><strong>Fig. 3</strong> — Pretraining the U-Net. Input is the first-iteration adjoint gradient; the target is the true density scaling function. Trained on 800 samples for 100 epochs (≈240 s), after ≈2 hours generating the training data on an Nvidia Quadro RTX 8000.</figcaption>
+    <figcaption><strong>Fig. 3</strong> — Pretraining: first-iteration adjoint gradient in, true γ field as the supervised target. 800 samples, 100 epochs (~240s), after ~2h generating training data.</figcaption>
   </figure>
-  <p>Once pretrained, the U-Net's weights become the starting point θ<sub>p</sub> for the actual FWI optimization — the downstream task is no different from NN-based FWI, except the network no longer starts blind:</p>
-  <div class="eq">
-    <div class="eq-row"><div>$$\hat\gamma(\theta_p)=N_\gamma\big(\theta_p;\ \nabla_\gamma\mathcal{L}(\hat\gamma^0;u^o)\big)$$</div><span class="eq-num">(14)</span></div>
-  </div>
+
+  <p>Those pretrained weights then become the starting point for the same NN-based FWI loop — nothing else changes, the network just no longer starts blind.</p>
+
   <figure>
     <img src="../assets/paper-figs/fig4_transfer.png" alt="Transfer learning NN-based FWI workflow: initial adjoint gradient goes into the pretrained U-Net, producing a density scaling function fed to the forward solver, compared to the observed wavefield">
-    <figcaption><strong>Fig. 4</strong> — Workflow of the transfer learning NN-based FWI. The pretrained U-Net always starts from its pretrained weights; the rest of the loop (forward solve, cost, gradient update) is identical to Fig. 2.</figcaption>
+    <figcaption><strong>Fig. 4</strong> — Transfer learning NN-based FWI: same loop as Fig. 2, but the U-Net starts from its pretrained weights instead of random ones.</figcaption>
   </figure>
 
-  <h3>Weight initialization still matters</h3>
-  <p>Even with pretraining, how the network's very last layer is initialized has an outsized effect. Glorot initialization alone leaves noisy artifacts in the first guess; initializing the last layer's weights from a narrow normal distribution (σ = 0.01) with a bias of 3, then passing the result through a sigmoid, produces a starting guess that's close to fully undamaged material almost everywhere — which is what real damage fields actually look like, mostly intact with a few confined flaws.</p>
+  <p>One more detail matters a lot: how the network's <em>last</em> layer is initialized. Plain Glorot initialization leaves noisy artifacts in the first guess; a narrow, high-bias initialization passed through a sigmoid instead produces a starting guess that's mostly undamaged material with a few confined flaws — much closer to what real damage actually looks like.</p>
+
   <figure>
     <img src="../assets/paper-figs/fig5_weightinit.png" alt="Comparison of reconstruction over iterations with and without manual last-layer weight initialization">
-    <figcaption><strong>Fig. 5</strong> — Effect of the weight initialization on the reconstruction of γ over 35 iterations: unmanaged initialization (top row) versus the narrow, high-bias last-layer setup (bottom row).</figcaption>
+    <figcaption><strong>Fig. 5</strong> — 35 iterations with unmanaged last-layer initialization (top) vs. the narrow, high-bias setup (bottom).</figcaption>
   </figure>
 
-  <h2 id="results">Results: three ellipses of different sizes</h2>
-  <p>Four synthetic damage cases of increasing difficulty were used in the paper to compare four methods head to head: conventional FWI, NN-based FWI, conventional FWI seeded with the pretrained network's guess, and the full transfer learning NN-based FWI. The clearest of the four to walk through is Case 3 — three ellipses of different sizes and orientations.</p>
+  <h2 id="results">Does it work?</h2>
+  <p>Four synthetic damage cases, increasing in difficulty, compared four methods: conventional FWI, NN-based FWI, conventional FWI seeded with the pretrained network's guess, and full transfer learning NN-based FWI. Case 3 — three ellipses of different sizes — makes the gap clearest: conventional FWI barely recovers the largest void and misses the rest; NN-based FWI gets one shape but struggles with the others; transfer learning NN-based FWI locates all three within 20 iterations with negligible artifacts.</p>
 
-  <div class="case-block">
-    <p>Conventional FWI can only roughly recover the rightmost void within 35 iterations and misses the other two. NN-based FWI recovers one shape but struggles with the rest. Transfer learning NN-based FWI locates all three within 20 iterations and keeps refining their shape afterward, with negligible artifacts.</p>
-    <figure class="fig-compact">
-      <img src="../assets/paper-figs/fig9_case3.png" alt="Comparison grid for case 3, three elliptical holes of different sizes, across four methods and iterations">
-      <figcaption><strong>Fig. 9</strong> — Case 3: three ellipses of different sizes and orientations, compared across all four methods and iterations 1, 10, 20, 35.</figcaption>
-    </figure>
-  </div>
-
-  <h3>Training and optimization hyperparameters</h3>
-  <table class="data">
-    <tr><th>Hyperparameter</th><th>Transfer learning NN-FWI</th><th>Conv. FWI + NN guess</th><th>NN-based FWI</th><th>Conventional FWI</th></tr>
-
-    <tr><td>Learning rate</td><td>5×10⁻⁴</td><td>5×10⁻²</td><td>5×10⁻⁴</td><td>8×10⁻²</td></tr>
-    <tr><td>Gradient clipping</td><td>1×10⁻⁵</td><td>1×10⁻⁵</td><td>5×10⁻⁵</td><td>1×10⁻⁵</td></tr>
-    <tr><td>Cost scaling</td><td>1×10¹⁰</td><td>1×10¹²</td><td>1×10⁸</td><td>1×10¹²</td></tr>
-  </table>
-  <table class="data">
-    <tr><th>U-Net pretraining hyperparameter</th><th>Value</th></tr>
-    <tr><td>Learning rate</td><td>8×10⁻⁴</td></tr>
-    <tr><td>Gradient clipping</td><td>5×10⁻⁵</td></tr>
-    <tr><td>LR schedule (β·epoch+1)^α</td><td>α = −0.5, β = 0.2</td></tr>
-    <tr><td>Batch size</td><td>samples ÷ 10</td></tr>
-    <tr><td>Pretraining samples / epochs</td><td>800 samples, 100 epochs</td></tr>
-  </table>
+  <figure class="fig-compact">
+    <img src="../assets/paper-figs/fig9_case3.png" alt="Comparison grid for case 3, three elliptical holes of different sizes, across four methods and iterations">
+    <figcaption><strong>Fig. 9</strong> — Case 3, all four methods, iterations 1/10/20/35.</figcaption>
+  </figure>
 
   <h2 id="limitations">Limitations</h2>
   <ul>
-    <li>Extra hyperparameters to tune: learning rate, its scheduler, gradient clipping, cost scaling, and how many samples to pretrain on.</li>
-    <li>Training data selection is a real trade-off: too-similar samples overfit and generalize poorly; as the domain grows, generating good training data and tuning hyperparameters both get harder.</li>
-    <li>A strong prior can mislead the search when real damage looks very different from anything in training (Case 4).</li>
+    <li>More hyperparameters to tune: learning rate, scheduler, gradient clipping, cost scaling, pretraining sample count.</li>
+    <li>Training data selection is a real trade-off — too-similar samples overfit; larger domains make good training data harder to generate.</li>
+    <li>A strong prior can mislead the search when real damage looks very different from anything seen in training.</li>
   </ul>
-
-  <h2 id="conclusion">Conclusion</h2>
-  <p>Reparametrizing FWI's material field with a neural network already regularizes the inverse problem in a useful way. Pretraining that network — supervised, on the mapping from a single adjoint gradient to the true damage field — removes its dependence on random weight initialization and gives the downstream optimization a genuinely informed starting point. Across every damage case tested except one deliberately adversarial one, transfer learning NN-based FWI converged faster and reconstructed more accurately than conventional FWI, plain NN-based FWI, or conventional FWI given the same pretrained starting guess.</p>
 
   <div class="license-note" id="cite">
     <p style="margin-bottom:10px;"><strong style="color:var(--text);">Cite this paper</strong></p>
@@ -263,32 +173,11 @@
   <span>TUM · Full Waveform Inversion</span>
 </footer>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
 <script>
   const toggle = document.getElementById('navToggle');
   const menu = document.getElementById('navMenu');
   toggle.addEventListener('click', () => menu.classList.toggle('open'));
   document.querySelectorAll('nav a').forEach(a => a.addEventListener('click', () => menu.classList.remove('open')));
-
-  document.addEventListener('DOMContentLoaded', function(){
-    if (window.renderMathInElement){
-      renderMathInElement(document.body, {
-        delimiters: [
-          {left: "$$", right: "$$", display: true},
-          {left: "$", right: "$", display: false}
-        ]
-      });
-    }
-    const gi = document.getElementById('gamma-inline');
-    if (gi) katex.render('\\gamma(x)', gi);
-    const ri = document.getElementById('rho-inline');
-    if (ri) katex.render('\\rho_0', ri);
-    const rxi = document.getElementById('rho-x-inline');
-    if (rxi) katex.render('\\rho(x)=\\gamma(x)\\rho_0', rxi);
-    const c0i = document.getElementById('c0-inline');
-    if (c0i) katex.render('c(x)=c_0', c0i);
-  });
 </script>
 
 </body>
