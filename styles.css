@@ -89,7 +89,7 @@ footer{
 @media (prefers-reduced-motion: reduce){ html{ scroll-behavior:auto; } }
 
 .edge-waves{
-  position:fixed; left:0; right:0;
+  position:absolute; left:0; right:0;
   height:60px; pointer-events:none; z-index:0;
   overflow:hidden;
 }
