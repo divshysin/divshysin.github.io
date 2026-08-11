@@ -3,24 +3,29 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Graph Neural Networks — Divya Shyam Singh</title>
-<meta name="description" content="An explainer on graph neural networks, from Divya Shyam Singh — write-up in progress.">
-<link rel="canonical" href="https://divshysin.github.io/explainers/graph-neural-networks.html">
-<meta name="robots" content="noindex">
+<title>Explainers — Divya Shyam Singh</title>
+<meta name="description" content="Write-ups on methods and ideas from Divya Shyam Singh, from graph learning to optimization.">
+<link rel="canonical" href="https://divshysin.github.io/explainers.html">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../styles.css?v=20260811c">
+<link rel="stylesheet" href="styles.css?v=20260811c">
 <style>
   main{ max-width:820px; }
-  section{ padding:0; border-bottom:none; }
-  article{ padding:150px 0 100px; }
-  .paper-head{ padding-bottom:40px; border-bottom:1px solid var(--line); margin-bottom:48px; }
-  .paper-head .eyebrow{ margin-bottom:16px; }
-  .paper-head h1{ font-family:'Fraunces', serif; font-weight:500; font-size:clamp(26px,4vw,36px); line-height:1.25; margin:0 0 18px; }
+  section{ padding-top:140px; }
   .back-link{ font-size:12px; color:var(--text-dim); text-decoration:none; }
   .back-link:hover{ color:var(--text); }
-  .coming-soon{ color:var(--text-dim); font-size:15.5px; max-width:60ch; }
+  .lede-strip{ color:var(--text-dim); font-size:15px; max-width:62ch; margin:-14px 0 28px; }
+  .explainer-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:20px; }
+  .explainer-card{
+    background:var(--bg-panel); border:1px solid var(--line);
+    border-radius:10px; padding:22px 24px; text-decoration:none;
+    display:block; transition:border-color .2s ease;
+  }
+  .explainer-card:hover{ border-color:var(--amber); }
+  .explainer-card h3{ font-family:'Fraunces', serif; font-weight:500; font-size:17px; margin:0 0 8px; color:var(--text); }
+  .explainer-card p{ color:var(--text-dim); font-size:14.5px; margin:0; }
+  @media (max-width:720px){ .explainer-grid{ grid-template-columns:1fr; } }
 </style>
 </head>
 <body>
@@ -50,30 +55,41 @@
 </div>
 
 <header>
-  <a href="../index.html" class="mark">Divya Shyam <span>Singh</span></a>
+  <a href="index.html" class="mark">Divya Shyam <span>Singh</span></a>
   <button class="nav-toggle mono" id="navToggle" aria-label="Toggle menu">Menu</button>
   <nav id="navMenu">
-    <a href="../index.html#hero">Work</a>
-    <a href="../explainers.html">Explainers</a>
-    <a href="../affiliations.html">Affiliations</a>
-    <a href="../about.html">About</a>
-    <a href="../personal.html">Personal</a>
+    <a href="index.html#hero">Work</a>
+    <a href="explainers.html">Explainers</a>
+    <a href="affiliations.html">Affiliations</a>
+    <a href="about.html">About</a>
+    <a href="personal.html">Personal</a>
   </nav>
 </header>
 
 <main>
-<article>
-
-  <a class="back-link mono" href="../explainers.html">← Back to explainers</a>
-
-  <div class="paper-head" style="margin-top:22px;">
-    <p class="eyebrow mono">Explainer</p>
-    <h1>Graph neural networks</h1>
-  </div>
-
-  <p class="coming-soon">Write-up in progress.</p>
-
-</article>
+  <section id="explainers">
+    <a class="back-link mono" href="index.html#hero">← Back</a>
+    <h2 style="margin-top:22px;">Notes on the ideas behind the work</h2>
+    <p class="lede-strip">Write-ups on methods and ideas I find worth explaining, from graph learning to optimization.</p>
+    <div class="explainer-grid">
+      <a class="explainer-card" href="explainers/graph-neural-networks.html">
+        <h3>Graph neural networks</h3>
+        <p>How message passing on graphs generalizes convolution to unstructured domains.</p>
+      </a>
+      <a class="explainer-card" href="explainers/nn-parameterization-optimization.html">
+        <h3>Neural network parameterization for optimization</h3>
+        <p>Reparametrizing an optimization variable with a network as an implicit regularizer.</p>
+      </a>
+      <a class="explainer-card" href="explainers/relaxed-adjoint-optimization.html">
+        <h3>Relaxed adjoint optimization</h3>
+        <p>Loosening the adjoint-state method's exactness for cheaper, more robust gradients.</p>
+      </a>
+      <a class="explainer-card" href="explainers/relaxed-nn-training.html">
+        <h3>Relaxed training of neural networks</h3>
+        <p>What changes when training objectives or constraints are relaxed during optimization.</p>
+      </a>
+    </div>
+  </section>
 </main>
 
 <footer>
