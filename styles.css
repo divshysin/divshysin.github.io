@@ -90,11 +90,11 @@ footer{
 
 .edge-waves{
   position:fixed; top:0; left:0; bottom:0;
-  width:120px; pointer-events:none; z-index:1;
-  overflow:hidden;
+  width:220px; pointer-events:none; z-index:1;
 }
 .edge-waves svg{
-  position:absolute; left:-30%; width:160%; height:200%;
+  position:absolute; left:0; width:100%; height:200%;
+  overflow:visible;
 }
 .edge-waves .w1, .edge-waves .w2, .edge-waves .w3, .edge-waves .w4{
   animation:wave-drift linear infinite;
@@ -116,7 +116,7 @@ footer{
 }
 
 @media (max-width:720px){
-  .edge-waves{ width:56px; }
+  .edge-waves{ width:100px; }
 }
 @media (prefers-reduced-motion: reduce){
   .edge-waves path{ animation:none !important; }
