@@ -6,7 +6,7 @@ set -e
 
 cd "$(dirname "$0")/.."
 
-for dir in assets/mushrooms assets/nature; do
+for dir in assets/mushrooms assets/nature assets/sports; do
   manifest="$dir/manifest.json"
   tmplist="$(mktemp)"
 
