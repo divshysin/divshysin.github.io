@@ -89,16 +89,18 @@ footer{
 @media (prefers-reduced-motion: reduce){ html{ scroll-behavior:auto; } }
 
 .edge-waves{
-  position:fixed; top:0; left:0; bottom:0;
-  width:110px; pointer-events:none; z-index:0;
+  position:fixed; left:0; right:0;
+  height:60px; pointer-events:none; z-index:0;
   overflow:hidden;
 }
+.edge-waves.top-waves{ top:58px; }
+.edge-waves.bottom-waves{ bottom:0; }
 .edge-waves svg{
-  position:absolute; left:0; width:150%; height:200%;
+  position:absolute; top:0; width:200%; height:100%;
   overflow:visible;
 }
 .edge-waves .w1, .edge-waves .w2, .edge-waves .w3, .edge-waves .w4{
-  animation:wave-drift linear infinite;
+  animation:wave-drift-x linear infinite;
 }
 .edge-waves path.w1, .edge-waves path.w2, .edge-waves path.w3, .edge-waves path.w4{
   fill:none;
@@ -111,13 +113,13 @@ footer{
 .edge-waves .w3{ stroke:#9b7fd4; fill:#9b7fd4; opacity:0.2; stroke-width:1.5; animation-duration:26s; animation-direction:reverse; animation-delay:-12s; }
 .edge-waves .w4{ stroke:#4fc7c3; fill:#4fc7c3; opacity:0.16; stroke-width:1.5; animation-duration:34s; animation-delay:-3s; }
 
-@keyframes wave-drift{
-  from{ transform:translateY(-50%); }
-  to{ transform:translateY(0%); }
+@keyframes wave-drift-x{
+  from{ transform:translateX(-50%); }
+  to{ transform:translateX(0%); }
 }
 
 @media (max-width:720px){
-  .edge-waves{ width:34px; }
+  .edge-waves{ height:36px; }
   .edge-waves .w1{ opacity:0.18; }
   .edge-waves .w2{ opacity:0.14; }
   .edge-waves .w3{ opacity:0.13; }
