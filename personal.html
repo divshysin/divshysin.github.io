@@ -66,7 +66,23 @@
     z-index:100; padding:40px; cursor:zoom-out;
   }
   .lightbox.open{ display:flex; }
-  .lightbox img{ max-width:100%; max-height:100%; border-radius:8px; }
+  .lightbox img{ max-width:100%; max-height:100%; border-radius:8px; cursor:default; }
+  .lightbox-arrow{
+    position:fixed; top:50%; transform:translateY(-50%);
+    width:44px; height:44px; border-radius:50%;
+    background:rgba(16,20,26,0.7); border:1px solid var(--line-strong); color:var(--text);
+    display:flex; align-items:center; justify-content:center;
+    cursor:pointer; z-index:101; transition:border-color .2s ease, color .2s ease;
+  }
+  .lightbox-arrow:hover{ border-color:var(--amber); color:var(--amber); }
+  .lightbox-arrow.prev{ left:20px; }
+  .lightbox-arrow.next{ right:20px; }
+  .lightbox-arrow svg{ width:18px; height:18px; fill:none; stroke:currentColor; stroke-width:2; }
+  @media (max-width:640px){
+    .lightbox-arrow{ width:38px; height:38px; }
+    .lightbox-arrow.prev{ left:8px; }
+    .lightbox-arrow.next{ right:8px; }
+  }
 </style>
 </head>
 <body>
@@ -131,7 +147,15 @@
 
 </main>
 
-<div class="lightbox" id="lightbox"><img id="lightbox-img" src="" alt=""></div>
+<div class="lightbox" id="lightbox">
+  <button type="button" class="lightbox-arrow prev" id="lightboxPrev" aria-label="Previous photo">
+    <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+  </button>
+  <img id="lightbox-img" src="" alt="">
+  <button type="button" class="lightbox-arrow next" id="lightboxNext" aria-label="Next photo">
+    <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+  </button>
+</div>
 
 <footer>
   <span>© 2026 Divya Shyam Singh</span>
@@ -147,9 +171,12 @@
   const ARROW_LEFT = '<svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>';
   const ARROW_RIGHT = '<svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>';
 
+  function imgSrc(folder, name){
+    return `assets/${folder}/${encodeURIComponent(name)}`;
+  }
+
   function imgTag(folder, name){
-    const src = `assets/${folder}/${encodeURIComponent(name)}`;
-    return `<figure><img src="${src}" alt="${folder} photo" loading="lazy"
+    return `<figure><img src="${imgSrc(folder, name)}" alt="${folder} photo" loading="lazy"
       onload="this.classList.add('loaded')"></figure>`;
   }
 
@@ -173,6 +200,7 @@
 
     const track = document.createElement('div');
     track.className = 'gallery-track';
+    track.dataset.folder = folder;
     track.innerHTML = files.map(name => imgTag(folder, name)).join('');
 
     const prevBtn = document.createElement('button');
@@ -207,23 +235,56 @@
     track.addEventListener('scroll', updateArrows);
     window.addEventListener('resize', updateArrows);
     updateArrows();
+
+    galleries[folder] = files;
   }
-  loadGallery('mushrooms', 'gallery-mushrooms');
-  loadGallery('nature', 'gallery-nature');
-  loadGallery('sports', 'gallery-sports');
+
+  const galleries = {};
+  Promise.all([
+    loadGallery('mushrooms', 'gallery-mushrooms'),
+    loadGallery('nature', 'gallery-nature'),
+    loadGallery('sports', 'gallery-sports')
+  ]);
 
   const lightbox = document.getElementById('lightbox');
   const lightboxImg = document.getElementById('lightbox-img');
+  const lightboxPrev = document.getElementById('lightboxPrev');
+  const lightboxNext = document.getElementById('lightboxNext');
+  let currentFolder = null;
+  let currentIndex = -1;
+
+  function openLightbox(folder, index){
+    currentFolder = folder;
+    currentIndex = index;
+    lightboxImg.src = imgSrc(folder, galleries[folder][index]);
+    lightbox.classList.add('open');
+  }
+  function showOffset(delta){
+    if (!currentFolder) return;
+    const files = galleries[currentFolder];
+    currentIndex = (currentIndex + delta + files.length) % files.length;
+    lightboxImg.src = imgSrc(currentFolder, files[currentIndex]);
+  }
+
   document.addEventListener('click', (e) => {
-    if (e.target.closest('.gallery') && e.target.tagName === 'IMG'){
-      lightboxImg.src = e.target.src;
-      lightbox.classList.add('open');
+    const img = e.target.closest('.gallery-track img');
+    if (img){
+      const folder = img.closest('.gallery-track').dataset.folder;
+      const figures = Array.from(img.closest('.gallery-track').querySelectorAll('img'));
+      openLightbox(folder, figures.indexOf(img));
+    } else if (e.target === lightboxPrev || e.target.closest('#lightboxPrev')){
+      showOffset(-1);
+    } else if (e.target === lightboxNext || e.target.closest('#lightboxNext')){
+      showOffset(1);
     } else if (e.target === lightbox){
       lightbox.classList.remove('open');
     }
   });
   document.addEventListener('keydown', (e) => {
+    if (!lightbox.classList.contains('open')) return;
     if (e.key === 'Escape') lightbox.classList.remove('open');
+    else if (e.key === 'ArrowLeft') showOffset(-1);
+    else if (e.key === 'ArrowRight') showOffset(1);
   });
 </script>
 
