@@ -11,11 +11,11 @@
 <style>
   #hero{
     display:block;
-    padding-top:140px; padding-bottom:60px;
+    padding-top:140px; padding-bottom:100px;
     border-bottom:none; position:relative;
   }
   #hero .hero-grid{
-    display:grid; grid-template-columns:1.3fr 1fr; gap:48px; align-items:center;
+    display:grid; grid-template-columns:1fr 1.1fr; gap:56px; align-items:start;
   }
   #hero .eyebrow{ opacity:0.9; }
   #hero h1{
@@ -25,73 +25,19 @@
   }
   #hero h1 em{ font-style:italic; color:var(--teal); }
   #hero p.lede{ color:var(--text-dim); font-size:17px; max-width:48ch; margin:0 0 28px; }
-  #hero .hero-tags{ display:flex; flex-wrap:wrap; gap:8px; }
+  #hero .hero-tags{ display:flex; flex-wrap:wrap; gap:8px; margin-bottom:32px; }
 
   .hero-photo{
     border-radius:14px; overflow:hidden;
     border:1px solid var(--line); background:var(--bg-panel);
-    aspect-ratio:4/5;
+    aspect-ratio:4/5; max-width:360px;
   }
   .hero-photo img{ width:100%; height:100%; object-fit:cover; display:block; }
 
-  @media (max-width:820px){
-    #hero{ padding-top:110px; }
-    #hero .hero-grid{ grid-template-columns:1fr; }
-    .hero-photo{ order:-1; max-width:280px; margin:0 auto; }
-  }
-
-  #personal .card p{ color:var(--text-dim); font-size:14.5px; margin:0 0 16px; }
-  .gallery-grid{
-    display:grid; grid-template-columns:repeat(auto-fill, minmax(260px,1fr));
-    gap:14px;
-  }
-  .gallery-grid figure{
-    margin:0; position:relative; overflow:hidden;
-    border-radius:10px; border:1px solid var(--line);
-    background:var(--bg-panel-2); cursor:zoom-in;
-  }
-  .gallery-grid img{
-    width:100%; aspect-ratio:4/3; object-fit:cover; display:block;
-    transition:transform .35s ease, opacity .3s ease;
-    opacity:0;
-  }
-  .gallery-grid img.loaded{ opacity:1; }
-  .gallery-grid figure:hover img{ transform:scale(1.04); }
-  .gallery-empty{ color:var(--text-dim); font-size:13px; font-style:italic; }
-
-  .gallery-more{
-    margin-top:16px; display:inline-flex; align-items:center; gap:8px;
-    background:none; border:1px solid var(--line-strong); color:var(--text);
-    font-family:'IBM Plex Mono', monospace; font-size:12px; letter-spacing:0.04em;
-    text-transform:uppercase; border-radius:20px; padding:9px 18px;
-    cursor:pointer; transition:border-color .2s ease, color .2s ease;
-  }
-  .gallery-more:hover{ border-color:var(--amber); color:var(--amber); }
-  .gallery-count{ color:var(--text-dim); font-size:12px; margin-left:2px; }
-
-  .lightbox{
-    position:fixed; inset:0; background:rgba(10,12,16,0.92);
-    display:none; align-items:center; justify-content:center;
-    z-index:100; padding:40px; cursor:zoom-out;
-  }
-  .lightbox.open{ display:flex; }
-  .lightbox img{ max-width:100%; max-height:100%; border-radius:8px; }
-
-  #affiliations .aff-row{
-    display:flex; justify-content:space-between; align-items:baseline;
-    padding:16px 0; border-bottom:1px solid var(--line);
-  }
-  #affiliations .aff-row:last-child{ border-bottom:none; }
-  #affiliations .aff-name{ font-family:'Fraunces', serif; font-size:17px; }
-  #affiliations .aff-role{ color:var(--text-dim); font-size:13px; }
-  #about p{ font-size:16px; color:var(--text-dim); max-width:64ch; }
-  #about p strong{ color:var(--text); font-weight:500; }
-
-  #work{ border-bottom:none; padding-bottom:100px; padding-top:120px; }
-  #work .lede-strip{ color:var(--text-dim); font-size:15px; max-width:62ch; margin:-14px 0 28px; }
-  .pub-heading{ font-family:'Fraunces', serif; font-weight:500; font-size:19px; margin:44px 0 6px; }
+  .pub-col .pub-heading{ font-family:'Fraunces', serif; font-weight:500; font-size:19px; margin:0 0 18px; }
   .pub-list{ display:flex; flex-direction:column; }
   .pub-item{ padding:18px 0; border-bottom:1px solid var(--line); }
+  .pub-item:first-child{ padding-top:0; }
   .pub-item:last-child{ border-bottom:none; }
   .pub-cite{
     margin:0; color:var(--text-dim); font-size:13.5px; line-height:1.7;
@@ -104,6 +50,30 @@
     font-size:13px; color:var(--amber); text-decoration:none;
     border-bottom:1px solid var(--amber);
   }
+
+  @media (max-width:820px){
+    #hero{ padding-top:110px; }
+    #hero .hero-grid{ grid-template-columns:1fr; gap:40px; }
+    .hero-photo{ max-width:280px; margin:0 auto 8px; }
+  }
+
+  #affiliations .aff-row{
+    display:flex; justify-content:space-between; align-items:baseline;
+    padding:16px 0; border-bottom:1px solid var(--line);
+  }
+  #affiliations .aff-row:last-child{ border-bottom:none; }
+  #affiliations .aff-name{ font-family:'Fraunces', serif; font-size:17px; }
+  #affiliations .aff-role{ color:var(--text-dim); font-size:13px; }
+  #about p{ font-size:16px; color:var(--text-dim); max-width:64ch; }
+  #about p strong{ color:var(--text); font-weight:500; }
+
+  #personal .card p{ color:var(--text-dim); font-size:14.5px; margin:0 0 16px; }
+  .personal-link{
+    display:inline-flex; align-items:center; gap:8px;
+    color:var(--amber); text-decoration:none; font-size:14px;
+    border-bottom:1px solid var(--amber); padding-bottom:2px;
+  }
+  .personal-link:hover{ color:var(--text); border-color:var(--text); }
 </style>
 </head>
 <body>
@@ -112,10 +82,10 @@
   <a href="#hero" class="mark">Divya Shyam <span>Singh</span></a>
   <button class="nav-toggle mono" id="navToggle" aria-label="Toggle menu">Menu</button>
   <nav id="navMenu">
-    <a href="#personal">Personal</a>
+    <a href="#hero">Work</a>
     <a href="#affiliations">Affiliations</a>
     <a href="#about">About</a>
-    <a href="#work">Work</a>
+    <a href="#personal">Personal</a>
   </nav>
 </header>
 
@@ -128,38 +98,47 @@
         <h1>Structural monitoring with <em>Full waveform inversion</em></h1>
         <p class="lede">PhD researcher at TUM. Neural networks parametrize the density field in full waveform inversion; transfer learning pre-trains them to accelerate convergence.</p>
         <div class="hero-tags">
-          <span class="tag">FWI</span>
-          <span class="tag">TUM</span>
-          <span class="tag">Structural NDT</span>
+          <span class="tag">Full waveform inversion</span>
+          <span class="tag">wave equation</span>
+          <span class="tag">optimization</span>
+          <span class="tag">machine learning</span>
+          <span class="tag">neural network parameterization</span>
+          <span class="tag">transfer learning</span>
+          <span class="tag">graph neural network</span>
+          <span class="tag">computational linear algebra</span>
+          <span class="tag">Wavefield reconstruction method</span>
+          <span class="tag">Structural health monitoring</span>
+        </div>
+        <div class="hero-photo">
+          <img src="assets/profile/photo.jpg" alt="Divya Shyam Singh" onerror="this.parentElement.style.display='none'">
         </div>
       </div>
-      <div class="hero-photo">
-        <img src="assets/profile/photo.jpg" alt="Divya Shyam Singh" onerror="this.parentElement.style.display='none'">
+      <div class="pub-col">
+        <h3 class="pub-heading">Publications</h3>
+        <div class="pub-list">
+          <div class="pub-item">
+            <p class="pub-cite">Singh, D. S., Herrmann, L., Bürchner, T., Dietrich, F., &amp; Kollmannsberger, S. (2026). Graph neural networks for full waveform inversion. <em>Computational Mechanics</em>, 1–17. <a href="https://doi.org/10.1007/s00466-026-02796-5" target="_blank" rel="noopener">https://doi.org/10.1007/s00466-026-02796-5</a></p>
+          </div>
+          <div class="pub-item">
+            <p class="pub-cite">Singh, D. S., Herrmann, L., Sun, Q., Bürchner, T., Dietrich, F., &amp; Kollmannsberger, S. (2025). Accelerating full waveform inversion by transfer learning. <em>Computational Mechanics</em>, 76, 323–344. <a href="https://doi.org/10.1007/s00466-025-02600-w" target="_blank" rel="noopener">https://doi.org/10.1007/s00466-025-02600-w</a></p>
+            <a class="pub-walkthrough" href="work/transfer-learning-fwi.html">Read the walkthrough →</a>
+          </div>
+          <div class="pub-item">
+            <p class="pub-cite">Singh, D. S., Chowdary, G. B. L., &amp; Roy Mahapatra, D. (2023). Hierarchical neural network and simulation based structural defect identification and classification. <em>Structural Control and Health Monitoring</em>, 2023, Article 3555133. <a href="https://doi.org/10.1155/2023/3555133" target="_blank" rel="noopener">https://doi.org/10.1155/2023/3555133</a></p>
+          </div>
+          <div class="pub-item">
+            <p class="pub-cite">Singh, D., Agrawal, A., &amp; Roy Mahapatra, D. (2023). A reduced-order modeling framework for simulating signatures of faults in a bladed disk. <em>SAE International Journal of Aerospace</em>, 16(1), 87–108. <a href="https://doi.org/10.4271/01-16-01-0006" target="_blank" rel="noopener">https://doi.org/10.4271/01-16-01-0006</a></p>
+          </div>
+          <div class="pub-item">
+            <p class="pub-cite">Vu, G., Timothy, J. J., Singh, D. S., Saydak, L. A., Saenger, E. H., &amp; Meschke, G. (2021). Numerical simulation-based damage identification in concrete. <em>Modelling</em>, 2(3), 355–369. <a href="https://doi.org/10.3390/modelling2030019" target="_blank" rel="noopener">https://doi.org/10.3390/modelling2030019</a></p>
+          </div>
+        </div>
       </div>
-    </div>
-  </section>
-
-  <section id="personal">
-    <p class="eyebrow mono">Ch.02 — Personal</p>
-    <h2>Off the clock</h2>
-    <div class="card" style="margin-bottom:20px;">
-      <h3>Mushroom documentation</h3>
-      <p>I document mushrooms I come across on hikes — identification, habitat, season.</p>
-      <div class="gallery" id="gallery-mushrooms"></div>
-    </div>
-    <div class="card" style="margin-bottom:20px;">
-      <h3>Nature photography</h3>
-      <p>Photos from time outdoors, mostly forests and trails.</p>
-      <div class="gallery" id="gallery-nature"></div>
-    </div>
-    <div class="card">
-      <h3>Table tennis</h3>
-      <p>I play at an intermediate club level, with an aggressive, attacking style.</p>
     </div>
   </section>
 
   <section id="affiliations">
-    <p class="eyebrow mono">Ch.03 — Affiliations</p>
+    <p class="eyebrow mono">Ch.02 — Affiliations</p>
     <h2>Where this work lives</h2>
     <div class="aff-row">
       <span class="aff-name">Technical University of Munich (TUM)</span>
@@ -168,66 +147,21 @@
   </section>
 
   <section id="about">
-    <p class="eyebrow mono">Ch.04 — About</p>
+    <p class="eyebrow mono">Ch.03 — About</p>
     <h2>The short version</h2>
     <p>I'm <strong>Shyam</strong>. I trained as an engineer and now work on wave physics and machine learning. My days go into finding hidden damage in solid structures. My free time goes into table tennis and looking after my plants.</p>
   </section>
 
-  <section id="work">
-    <p class="eyebrow mono">Ch.05 — Work</p>
-    <h2>Full waveform inversion for solid structures</h2>
-    <p class="lede-strip">Physics-based and neural-network-based inversion of elastic and acoustic wavefields for internal damage localization.</p>
-    <div class="card-grid">
-      <div class="card">
-        <h3>Wave-based damage detection</h3>
-        <p>Damage is localized by inverting how elastic and acoustic waves scatter as they propagate through a structure, without direct access to the affected region.</p>
-      </div>
-      <div class="card">
-        <h3>Physics-informed learning</h3>
-        <p>Adjoint-based inversion is combined with neural network parametrizations to regularize the reconstruction and accelerate convergence.</p>
-      </div>
-      <div class="card">
-        <h3>Engineering foundation</h3>
-        <p>Methods build on mechanical and civil engineering: structural dynamics, finite element and spectral element discretizations.</p>
-      </div>
-    </div>
-    <div class="tag-row">
-      <span class="tag">Full waveform inversion</span>
-      <span class="tag">wave equation</span>
-      <span class="tag">optimization</span>
-      <span class="tag">machine learning</span>
-      <span class="tag">neural network parameterization</span>
-      <span class="tag">transfer learning</span>
-      <span class="tag">graph neural network</span>
-      <span class="tag">computational linear algebra</span>
-      <span class="tag">Wavefield reconstruction method</span>
-      <span class="tag">Structural health monitoring</span>
-    </div>
-
-    <h3 class="pub-heading">Publications</h3>
-    <div class="pub-list">
-      <div class="pub-item">
-        <p class="pub-cite">Singh, D. S., Herrmann, L., Bürchner, T., Dietrich, F., &amp; Kollmannsberger, S. (2026). Graph neural networks for full waveform inversion. <em>Computational Mechanics</em>, 1–17. <a href="https://doi.org/10.1007/s00466-026-02796-5" target="_blank" rel="noopener">https://doi.org/10.1007/s00466-026-02796-5</a></p>
-      </div>
-      <div class="pub-item">
-        <p class="pub-cite">Singh, D. S., Herrmann, L., Sun, Q., Bürchner, T., Dietrich, F., &amp; Kollmannsberger, S. (2025). Accelerating full waveform inversion by transfer learning. <em>Computational Mechanics</em>, 76, 323–344. <a href="https://doi.org/10.1007/s00466-025-02600-w" target="_blank" rel="noopener">https://doi.org/10.1007/s00466-025-02600-w</a></p>
-        <a class="pub-walkthrough" href="work/transfer-learning-fwi.html">Read the walkthrough →</a>
-      </div>
-      <div class="pub-item">
-        <p class="pub-cite">Singh, D. S., Chowdary, G. B. L., &amp; Roy Mahapatra, D. (2023). Hierarchical neural network and simulation based structural defect identification and classification. <em>Structural Control and Health Monitoring</em>, 2023, Article 3555133. <a href="https://doi.org/10.1155/2023/3555133" target="_blank" rel="noopener">https://doi.org/10.1155/2023/3555133</a></p>
-      </div>
-      <div class="pub-item">
-        <p class="pub-cite">Singh, D., Agrawal, A., &amp; Roy Mahapatra, D. (2023). A reduced-order modeling framework for simulating signatures of faults in a bladed disk. <em>SAE International Journal of Aerospace</em>, 16(1), 87–108. <a href="https://doi.org/10.4271/01-16-01-0006" target="_blank" rel="noopener">https://doi.org/10.4271/01-16-01-0006</a></p>
-      </div>
-      <div class="pub-item">
-        <p class="pub-cite">Vu, G., Timothy, J. J., Singh, D. S., Saydak, L. A., Saenger, E. H., &amp; Meschke, G. (2021). Numerical simulation-based damage identification in concrete. <em>Modelling</em>, 2(3), 355–369. <a href="https://doi.org/10.3390/modelling2030019" target="_blank" rel="noopener">https://doi.org/10.3390/modelling2030019</a></p>
-      </div>
+  <section id="personal">
+    <p class="eyebrow mono">Ch.04 — Personal</p>
+    <h2>Off the clock</h2>
+    <div class="card">
+      <p>Mushroom documentation, nature photography, and table tennis.</p>
+      <a class="personal-link mono" href="personal.html">See more →</a>
     </div>
   </section>
 
 </main>
-
-<div class="lightbox" id="lightbox"><img id="lightbox-img" src="" alt=""></div>
 
 <footer>
   <span>© 2026 Divya Shyam Singh</span>
@@ -239,70 +173,6 @@
   const menu = document.getElementById('navMenu');
   toggle.addEventListener('click', () => menu.classList.toggle('open'));
   document.querySelectorAll('nav a').forEach(a => a.addEventListener('click', () => menu.classList.remove('open')));
-
-  const PAGE_SIZE = 5;
-
-  function imgTag(folder, name){
-    const src = `assets/${folder}/${encodeURIComponent(name)}`;
-    return `<figure><img src="${src}" alt="${folder} photo" loading="lazy"
-      onload="this.classList.add('loaded')"></figure>`;
-  }
-
-  async function loadGallery(folder, containerId){
-    const container = document.getElementById(containerId);
-    let files;
-    try {
-      const res = await fetch(`assets/${folder}/manifest.json`);
-      files = await res.json();
-    } catch (e) {
-      container.innerHTML = '<p class="gallery-empty">Could not load photos.</p>';
-      return;
-    }
-    if (!files.length){
-      container.innerHTML = '<p class="gallery-empty">No photos yet.</p>';
-      return;
-    }
-
-    let shown = 0;
-    const grid = document.createElement('div');
-    grid.className = 'gallery-grid';
-    container.appendChild(grid);
-
-    const moreBtn = document.createElement('button');
-    moreBtn.type = 'button';
-    moreBtn.className = 'gallery-more mono';
-
-    function renderMore(){
-      const next = files.slice(shown, shown + PAGE_SIZE);
-      grid.insertAdjacentHTML('beforeend', next.map(name => imgTag(folder, name)).join(''));
-      shown += next.length;
-      if (shown < files.length){
-        moreBtn.innerHTML = `Show more <span class="gallery-count">(${shown}/${files.length})</span>`;
-        moreBtn.style.display = '';
-      } else {
-        moreBtn.style.display = 'none';
-      }
-    }
-    moreBtn.addEventListener('click', renderMore);
-    container.appendChild(moreBtn);
-    renderMore();
-  }
-  loadGallery('mushrooms', 'gallery-mushrooms');
-  loadGallery('nature', 'gallery-nature');
-
-  const lightbox = document.getElementById('lightbox');
-  const lightboxImg = document.getElementById('lightbox-img');
-  document.addEventListener('click', (e) => {
-    if (e.target.closest('.gallery') && e.target.tagName === 'IMG'){
-      lightboxImg.src = e.target.src;
-      lightbox.classList.add('open');
-    } else if (e.target === lightbox){
-      lightbox.classList.remove('open');
-    }
-  });
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') lightbox.classList.remove('open');
-  });
 </script>
 
 </body>
