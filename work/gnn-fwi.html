@@ -33,6 +33,12 @@
   .abstract p{ margin:0; }
   .abstract .eyebrow{ margin-bottom:10px; }
 
+  figure{ margin:28px 0 32px; }
+  figure img{ width:100%; height:auto; display:block; border-radius:8px; border:1px solid var(--line); background:#fff; }
+  figcaption{ font-size:13px; color:var(--text-dim); margin-top:10px; line-height:1.55; }
+  figcaption strong{ color:var(--text); }
+  figure.fig-compact{ max-width:480px; margin-left:auto; margin-right:auto; }
+
   table.data{ width:100%; border-collapse:collapse; margin:0 0 24px; font-size:13.5px; }
   table.data th, table.data td{ text-align:left; padding:8px 12px; border-bottom:1px solid var(--line); }
   table.data th{ color:var(--text); font-family:'IBM Plex Mono', monospace; font-size:11px; text-transform:uppercase; letter-spacing:0.03em; font-weight:500; }
@@ -105,12 +111,30 @@
     <p>Neural-network-parametrized FWI and adjoint-gradient transfer learning both improve reconstruction quality, but until now only worked on uniform grids. This paper swaps the CNN for a graph convolutional network (GCN), so the same approach works on arbitrarily shaped, unstructured meshes. Pre-training on cheap 2D scalar-wave data transfers to 3D elastic FWI on complex geometries, converging faster and more accurately than classical FWI.</p>
   </div>
 
+  <figure>
+    <img src="../assets/gnn-figs/fig1_workflow.png" alt="Flowchart: pre-training a GCN on 2D rectangular scalar-wave data, then applying it to predict damage on 3D elastic-wave geometries">
+    <figcaption><strong>Fig. 1</strong> — Pre-train the GCN once on cheap 2D rectangular scalar-wave data (top). The same pre-trained network then parametrizes γ for TL-FWI on entirely different 3D elastic-wave geometries, materials, and configurations (bottom) — no retraining.</figcaption>
+  </figure>
+
   <h2>The problem with grids</h2>
   <p>My <a href="transfer-learning-fwi.html">earlier transfer-learning paper</a> pre-trained a CNN to map a first-iteration adjoint gradient to the damage field, then used that network to parametrize γ throughout FWI. It worked well — but CNNs are tied to fixed rectangular grids. A network trained on one grid can't be dropped onto a differently shaped or differently sized mesh without redesigning the architecture. Real ultrasonic testing rarely happens on convenient rectangles: flanges, columns, brackets — anything with holes, curves, or an irregular boundary — breaks that assumption.</p>
 
   <h2>Graphs instead of grids</h2>
-  <p>A GCN doesn't care about grid structure. It represents the finite element mesh directly as a graph: mesh nodes become graph vertices, edges encode which nodes are connected, and γ is stored as a feature on each node. Each layer updates a node's value by combining its own value with an aggregation over its neighbors, using weights that are <em>shared across every node</em> regardless of how many neighbors it has. That weight-sharing is what makes the whole thing mesh-agnostic: a GCN pre-trained on one geometry drops onto a completely different mesh — different shape, different size, different node count — with no retraining or architecture changes.</p>
-  <p>The network keeps the same encoder–bottleneck–decoder shape as the earlier CNN (channels expand 1→256 through the encoder, then back down to 1), just built from graph convolution layers instead of grid convolutions.</p>
+  <p>A GCN doesn't care about grid structure. It represents the finite element mesh directly as a graph: mesh nodes become graph vertices, edges encode which nodes are connected, and γ is stored as a feature on each node.</p>
+
+  <figure>
+    <img src="../assets/gnn-figs/fig4_mesh2graph.png" alt="A meshed domain converted to a graph, with node features (density scaling values) and connectivity stored as arrays">
+    <figcaption><strong>Fig. 4</strong> — A meshed domain becomes a graph: mesh nodes become graph vertices, and γ at each node becomes a node feature. Connectivity between nodes is stored explicitly instead of being implied by a fixed grid layout.</figcaption>
+  </figure>
+
+  <p>Each layer updates a node's value by combining its own value with an aggregation over its neighbors, using weights that are <em>shared across every node</em> regardless of how many neighbors it has.</p>
+
+  <figure class="fig-compact">
+    <img src="../assets/gnn-figs/fig3_generalization.png" alt="Two graphs with different connectivity around a target node, both updated with the same shared weights Ws and Wn">
+    <figcaption><strong>Fig. 3</strong> — The same weights W<sub>s</sub> (self) and W<sub>n</sub> (neighbors) apply regardless of how many neighbors a node has. That's what lets a pre-trained GCN generalize to meshes it has never seen.</figcaption>
+  </figure>
+
+  <p>That weight-sharing is what makes the whole thing mesh-agnostic: a GCN pre-trained on one geometry drops onto a completely different mesh — different shape, different size, different node count — with no retraining or architecture changes. The network keeps the same encoder–bottleneck–decoder shape as the earlier CNN (channels expand 1→256 through the encoder, then back down to 1), just built from graph convolution layers instead of grid convolutions.</p>
 
   <h2>Pre-training, same idea, now on graphs</h2>
   <p>Pre-training follows the same recipe as before: feed the GCN the first-iteration adjoint gradient from a classical FWI run, train it to output the true damage field, minimize MSE. The training set is still just simple 2D rectangles with a single elliptical void, solved with the cheap scalar wave equation — only 200 samples this time, since graph operations don't parallelize on GPUs as well as dense grid convolutions do, so each sample is more expensive.</p>
@@ -123,6 +147,12 @@
     <li><strong>A 3D flange</strong> with holes and two ellipsoidal defects: correctly locates both damaged regions (with one false positive from hole-boundary reflections) and finishes in 5.5h vs. 13.7h for classical FWI, with less noise.</li>
     <li><strong>A 3D cylindrical column</strong>, at two orders of magnitude lower excitation frequency than anything in training: still localizes the damage correctly and reconstructs it more accurately than classical FWI (MSE ≈ 21,000 vs. ≈ 46,600).</li>
   </ul>
+
+  <figure>
+    <img src="../assets/gnn-figs/fig10_flange.png" alt="Point cloud visualization of a flange with two elliptical damages: ground truth, GCN initial guess, GCN-based TL-FWI reconstruction, and classical FWI reconstruction">
+    <figcaption><strong>Fig. 10</strong> — Flange with two hidden elliptical defects. The GCN's initial guess (b) already locates both, with one false positive near a hole. After optimization, GCN-based TL-FWI (c) matches the ground truth (a) far more cleanly than classical FWI given the same starting guess (d) — 5.5h vs. 13.7h.</figcaption>
+  </figure>
+
   <p>Against the original CNN on the CNN's home turf — the same rectangular grid it was designed for — the CNN still wins: sharper initial guess, faster convergence, fewer artifacts. That gap is expected and is the trade-off for geometric flexibility.</p>
 
   <h2>Limitations</h2>
